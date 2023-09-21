@@ -28,6 +28,7 @@ export default function Root() {
       <>
           <div id="searchbox">
             <h1>Airlift 2023 Session Finder</h1>        
+            <p>Use OpenAI to search for a session that will be interesting for you. Write the topic you're interested about, and a list of the most related session will be given to you.</p>
             <div>
               <Form id="search-form" role="search">
                 <input
