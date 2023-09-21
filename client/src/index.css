@@ -61,6 +61,16 @@ html {
   width: 100%;
 }
 
+#header > * {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+#loginAlert {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 #searchbox > * {
   padding-left: 2rem;
   padding-right: 2rem;

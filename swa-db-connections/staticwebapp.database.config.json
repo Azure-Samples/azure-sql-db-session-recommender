@@ -34,7 +34,7 @@
         "object": "dbo.stp_FindRelatedSessions",
         "type": "stored-procedure",
         "parameters": {
-          "text": "content to search for"
+          "text": ""
         }
       },
       "permissions": [
