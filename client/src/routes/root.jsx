@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Form, useLoaderData, useNavigation, } from "react-router-dom";
-import { getSessions } from "../sessions";
+import { getSessions, getSessionsCount } from "../sessions";
+import { getUserInfo } from "../user";
 
 export async function loader({ request }) {
     const url = new URL(request.url);
@@ -8,11 +9,13 @@ export async function loader({ request }) {
     //console.log(`q1: ${searchQuery}`); 
     const isSearch = (searchQuery == "" ) ? false : true;
     const sessions =  isSearch ? await getSessions(searchQuery) : [];  
-    return { sessions, searchQuery, isSearch };
+    const sessionsCount = await getSessionsCount();
+    const userInfo = await getUserInfo(request);
+    return { userInfo, sessionsCount, sessions, searchQuery, isSearch };
 }
 
 export default function Root() {
-    const { sessions, searchQuery, isSearch} = useLoaderData();
+    const { userInfo, sessionsCount, sessions, searchQuery, isSearch} = useLoaderData();
     const navigation = useNavigation();
 
     //console.log(`q2: ${searchQuery}`);
@@ -31,8 +34,14 @@ export default function Root() {
       <>
           <div id="searchbox">
             <h1>Airlift 2023 Session Finder</h1>     
-            <a href="/.auth/login/aad">Login with Microsoft Entra ID</a>   
-            <p>Use OpenAI to search for a session that will be interesting for you. Write the topic you're interested about, and a list of the most related session will be given to you.</p>
+            <div id="user-info">
+              { userInfo ? 
+                <span>Welcome {userInfo.userDetails}!</span> 
+                : 
+                <a href="/.auth/login/aad">Login with Microsoft Entra ID</a>
+              }
+            </div>   
+            <p>Use OpenAI to search for a session that will be interesting for you. Write the topic you're interested about, and a list of the most related session will be given to you. There are {sessionsCount} session indexed so far.</p>                        
             <div>
               <Form id="search-form" role="search">
                 <input
@@ -48,7 +57,7 @@ export default function Root() {
                 <div className="sr-only" aria-live="polite"></div>       
                 <button type="submit">Search</button>                             
               </Form>
-            </div>
+            </div>              
           </div>
           <div id="sessions" className={navigation.state === "loading" ? "loading" : ""}>
           {sessions.length ? (
