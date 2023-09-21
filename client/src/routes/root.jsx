@@ -1,32 +1,51 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import { Form, useLoaderData, useNavigation, } from "react-router-dom";
 import { getSessions } from "../sessions";
 
 export async function loader({ request }) {
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
-
-    const sessions = await getSessions(q);
-    return { sessions };
+    //console.log(q);
+    const sessions = q == '' ? [] : await getSessions(q);
+    return { sessions, q };
 }
 
 export default function Root() {
-    const { sessions } = useLoaderData();
+    const { sessions, q } = useLoaderData();
+    const navigation = useNavigation();
+
+    const searching =
+      navigation.location &&
+      new URLSearchParams(navigation.location.search).has(
+        "q"
+      );
+
+    useEffect(() => {
+      document.getElementById("q").value = q;
+    }, [q]);
+
     return (
       <>
-          <div>
-            <h1>Airlift Session Finder</h1>            
-            <Form id="search-form" role="search">
-              <input
-                id="q"
-                aria-label="Search contacts"
-                placeholder="Search"
-                type="search"
-                name="q"
-              />            
-              <button type="submit">Search</button>
-            </Form>
+          <div id="searchbox">
+            <h1>Airlift Session Finder</h1>        
+            <div>
+              <Form id="search-form" role="search">
+                <input
+                  id="q"
+                  className={searching ? "loading" : ""}
+                  aria-label="Search contacts"
+                  placeholder="Search"
+                  type="search"
+                  name="q"
+                  defaultValue={q}
+                />        
+                <div id="search-spinner" aria-hidden hidden={!searching} />
+                <div className="sr-only" aria-live="polite"></div>       
+                <button type="submit">Search</button>                             
+              </Form>
+            </div>
           </div>
-          <nav>
+          <div id="sessions" className={navigation.state === "loading" ? "loading" : ""}>
           {sessions.length ? (
             <ul>
               {sessions.map((session) => (
@@ -40,10 +59,10 @@ export default function Root() {
             </ul>
           ) : (
             <p>
-              <i>No sessions found</i>
+              <i>{q != "" ? "No session found" : "Use OpenAI to search for a session that will be interesting for you"}</i>
             </p>
           )}
-          </nav>
+          </div>          
       </>
     );
   }
