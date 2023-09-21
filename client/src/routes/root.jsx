@@ -4,15 +4,18 @@ import { getSessions } from "../sessions";
 
 export async function loader({ request }) {
     const url = new URL(request.url);
-    const q = url.searchParams.get("q");
-    //console.log(q);
-    const sessions = q == '' ? [] : await getSessions(q);
-    return { sessions, q };
+    const searchQuery = url.searchParams.get("q") ?? "";    
+    //console.log(`q1: ${searchQuery}`); 
+    const isSearch = (searchQuery == "" ) ? false : true;
+    const sessions =  isSearch ? await getSessions(searchQuery) : [];  
+    return { sessions, searchQuery, isSearch };
 }
 
 export default function Root() {
-    const { sessions, q } = useLoaderData();
+    const { sessions, searchQuery, isSearch} = useLoaderData();
     const navigation = useNavigation();
+
+    //console.log(`q2: ${searchQuery}`);
 
     const searching =
       navigation.location &&
@@ -21,24 +24,25 @@ export default function Root() {
       );
 
     useEffect(() => {
-      document.getElementById("q").value = q;
-    }, [q]);
+      document.getElementById("q").value = searchQuery;
+    }, [searchQuery]);
 
     return (
       <>
           <div id="searchbox">
-            <h1>Airlift 2023 Session Finder</h1>        
+            <h1>Airlift 2023 Session Finder</h1>     
+            <a href="/.auth/login/aad">Login with Microsoft Entra ID</a>   
             <p>Use OpenAI to search for a session that will be interesting for you. Write the topic you're interested about, and a list of the most related session will be given to you.</p>
             <div>
               <Form id="search-form" role="search">
                 <input
                   id="q"
                   className={searching ? "loading" : ""}
-                  aria-label="Search contacts"
+                  aria-label="Search sessions"
                   placeholder="Search"
                   type="search"
                   name="q"
-                  defaultValue={q}
+                  defaultValue={searchQuery}
                 />        
                 <div id="search-spinner" aria-hidden hidden={!searching} />
                 <div className="sr-only" aria-live="polite"></div>       
@@ -60,7 +64,7 @@ export default function Root() {
             </ul>
           ) : (
             <p>
-              <i>{q != "" ? "No session found" : "Use OpenAI to search for a session that will be interesting for you"}</i>
+              <i>{isSearch ? "No session found" : "Use OpenAI to search for a session that will be interesting for you"}</i>
             </p>
           )}
           </div>          
