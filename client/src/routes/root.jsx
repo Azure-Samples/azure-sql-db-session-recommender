@@ -27,7 +27,7 @@ export default function Root() {
     return (
       <>
           <div id="searchbox">
-            <h1>Airlift Session Finder</h1>        
+            <h1>Airlift 2023 Session Finder</h1>        
             <div>
               <Form id="search-form" role="search">
                 <input
