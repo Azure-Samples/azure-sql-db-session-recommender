@@ -29,13 +29,28 @@
     }
   },
   "entities": {
-    "RelatedSessions": {
+    "FindRelatedSessions": {
       "source": {
         "object": "dbo.stp_FindRelatedSessions",
         "type": "stored-procedure",
         "parameters": {
           "text": "content to search for"
         }
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": [ "*" ]
+        }
+      ]
+    },
+    "GetSessionsCountAggregate": {
+      "source": {
+        "object": "dbo.stp_GetSessionsCountAggregate",
+        "type": "stored-procedure"        
+      },
+      "rest": {
+        "methods": [ "get" ]
       },
       "permissions": [
         {
