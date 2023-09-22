@@ -54,7 +54,7 @@
       },
       "permissions": [
         {
-          "role": "authenticated",
+          "role": "anonymous",
           "actions": [ "execute" ]
         }
       ]
