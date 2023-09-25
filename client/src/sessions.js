@@ -13,7 +13,21 @@ export async function getSessions(content) {
   const response = await fetch("/data-api/rest/FindRelatedSessions", settings);
   if (!response.ok) return '[]';
   const data = await response.json();
-  return data.value;
+  var sessions = []; 
+  var errorInfo = null;
+  if (data.value.length > 0) {
+    if (data.value[0].error_code) {
+        errorInfo = {
+          errorSource: data.value[0].error_source,
+          errorCode: data.value[0].error_code,
+          errorMessage: data.value[0].error_message
+        };
+    } else {
+      sessions = data.value;
+    }
+  }
+ 
+  return {sessions:sessions, errorInfo:errorInfo};
 }
 
 export async function getSessionsCount() {

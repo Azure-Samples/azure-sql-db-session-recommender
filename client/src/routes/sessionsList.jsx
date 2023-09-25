@@ -5,13 +5,13 @@ import { getSessions } from "../sessions";
 export async function loader({ request }) {
     const url = new URL(request.url);
     const searchQuery = url.searchParams.get("q") ?? "";
-    const isSearch = (searchQuery == "") ? false : true;
-    const sessions = isSearch ? await getSessions(searchQuery) : [];
-    return { sessions, searchQuery, isSearch };
+    var isSearch = (searchQuery == "") ? false : true;
+    const {sessions, errorInfo} = isSearch ? await getSessions(searchQuery) : {sessions:[], errorInfo:null};
+    return { sessions, searchQuery, isSearch, errorInfo };
 }
 
 export default function SessionsList() {
-    const { sessions, searchQuery, isSearch } = useLoaderData();
+    const { sessions, searchQuery, isSearch, errorInfo } = useLoaderData();
     const navigation = useNavigation();
 
     const searching =
@@ -45,6 +45,7 @@ export default function SessionsList() {
                 </div>
             </div>
             <div id="sessions" className={navigation.state === "loading" ? "loading" : ""}>
+                {!errorInfo ? "" : <p id="error"><i>{"Error" + errorInfo.errorMessage}</i></p>}
                 {sessions.length ? (
                     <ul>
                         {sessions.map((session) => (
@@ -58,7 +59,9 @@ export default function SessionsList() {
                     </ul>
                 ) : (
                     <p>
-                        <i>{isSearch ? "No session found" : "Use OpenAI to search for a session that will be interesting for you"}</i>
+                        <i>
+                            { isSearch ? "No session found" : "Use OpenAI to search for a session that will be interesting for you" }
+                        </i>
                     </p>
                 )}
             </div>
