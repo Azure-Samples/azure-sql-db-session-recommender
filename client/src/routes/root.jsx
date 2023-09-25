@@ -22,7 +22,7 @@ export default function Root() {
             <a href="/.auth/login/aad">Login with Microsoft Entra ID</a>
           }
         </div>
-        <p>Use OpenAI to search for a session that will be interesting for you. Write the topic you're interested in, and a list of up to five the most interesting session will be given to you. There are {sessionsCount} session indexed so far.</p>
+        <p>Use OpenAI to search for a session that will be interesting for you. Write the topic you're interested in, and the top ten most interesting and related session will be given to you. There are {sessionsCount} session indexed so far.</p>
       </div>
       <div>
       { userInfo ?
