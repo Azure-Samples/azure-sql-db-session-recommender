@@ -39,6 +39,12 @@
           "min_similarity": 0.65
         }
       },
+      "rest": {
+        "methods": [ "post" ]
+      },
+      "graphql": {
+        "operation": "query"
+      },
       "permissions": [
         {
           "role": "authenticated",
@@ -53,6 +59,9 @@
       },
       "rest": {
         "methods": [ "get" ]
+      },
+      "graphql": {
+        "operation": "query"
       },
       "permissions": [
         {
