@@ -1,5 +1,5 @@
 {
-  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v0.8.51/dab.draft.schema.json",
+  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v0.8.52/dab.draft.schema.json",
   "data-source": {
     "database-type": "mssql",
     "connection-string": "@env('MSSQL')",
@@ -34,7 +34,9 @@
         "object": "dbo.stp_FindRelatedSessions",
         "type": "stored-procedure",
         "parameters": {
-          "text": ""
+          "text": "",
+          "top": 10,
+          "min_similarity": 0.65
         }
       },
       "permissions": [
