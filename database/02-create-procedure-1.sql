@@ -1,8 +1,16 @@
 create or alter procedure dbo.stp_StoreSession
-@title nvarchar(100),
+@title nvarchar(200),
 @abstract nvarchar(max)
 as
 set nocount on
+
+declare @th as binary(64) = hashbytes('sha2_512', @title);
+declare @ah as binary(64) = hashbytes('sha2_512', @abstract);
+
+if (exists (select * from dbo.Sessions where title_hash = @th and abstract_hash = @ah)) begin
+    print 'Session already exists';
+    return;
+end
 
 /*
     Get the embeddings for the input text by calling the OpenAI API
@@ -46,9 +54,9 @@ select @id = id from dbo.Sessions where title = @title;
 if (@id is null)
 begin
     set @id = next value for dbo.GlobalId;
-    insert into dbo.Sessions (id, title, abstract) values (@id, @title, @abstract)
+    insert into dbo.Sessions (id, title, abstract, title_hash, abstract_hash) values (@id, @title, @abstract, @th, @ah)
 end else begin
-    update dbo.Sessions set title = @title where id = @id
+    update dbo.Sessions set title = @title, abstract = @abstract, title_hash = @th, abstract_hash = @ah where id = @id
     delete from dbo.SessionAbstractEmbeddings where session_id = @id
 end
 

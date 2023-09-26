@@ -3,7 +3,7 @@ select
     Title,
     Abstract
 from 
-    dbo.Airlift23ENGsessions
+    [dbo].[Airlift23-ENG sessions (2)]
 where
     Abstract is not null
 
@@ -20,3 +20,7 @@ end
 
 close c
 deallocate c
+go
+
+select * from dbo.Sessions order by title
+
