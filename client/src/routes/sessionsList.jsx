@@ -51,7 +51,7 @@ export default function SessionsList() {
                         {sessions.map((session) => (
                             <li key={session.id}>
                                 <h2>{session.title}</h2>
-                                <h4>Score: {(session.cosine_distance * 100).toFixed(2)}%</h4>
+                                <h4>Score: {(session.cosine_similarity * 100).toFixed(2)}%</h4>
                                 <div id="abstract">
                                     {session.abstract}
                                 </div>
