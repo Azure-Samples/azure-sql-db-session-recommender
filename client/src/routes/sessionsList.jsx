@@ -50,8 +50,9 @@ export default function SessionsList() {
                     <ul>
                         {sessions.map((session) => (
                             <li key={session.id}>
-                                <h2>{session.title} </h2>
-                                <div>
+                                <h2>{session.title}</h2>
+                                <h4>Score: {(session.cosine_distance * 100).toFixed(2)}%</h4>
+                                <div id="abstract">
                                     {session.abstract}
                                 </div>
                             </li>

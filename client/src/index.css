@@ -138,6 +138,20 @@ button:active {
   list-style: none;
 }
 
+
 #sessions p {
   text-align: center;
+}
+
+#sessions h4 {
+  margin-top: -1.5rem;
+  background: lightblue;
+  text-align: center;
+  border-radius: 1rem;
+  width: 6rem;
+  font-size: smaller;
+}
+
+#abstract {
+  margin-top: -1rem;
 }
