@@ -1,6 +1,6 @@
 create or alter procedure dbo.stp_FindRelatedSessions
-@text nvarchar(max)
-@top int = 10
+@text nvarchar(max),
+@top int = 10,
 @min_similarity decimal(19,16) = 0.65
 as
 if (@text is null) return;
