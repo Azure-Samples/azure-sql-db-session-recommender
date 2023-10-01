@@ -12,7 +12,8 @@ create table dbo.[Sessions]
     title nvarchar(200) not null unique,
     abstract nvarchar(max) not null,
     title_hash binary(64) not null,
-    abstract_hash binary(64) not null
+    abstract_hash binary(64) not null,
+    last_seen_in_source_data datetime2 null
 )
 go
 
