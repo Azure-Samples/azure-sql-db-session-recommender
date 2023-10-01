@@ -54,7 +54,7 @@
     },
     "SearchVideoRecordings": {
       "source": {
-        "object": "dbo.video_recordings_searched_text",
+        "object": "dbo.stp_search_video_recordings",
         "type": "stored-procedure",
         "parameters": {
           "text": "",
