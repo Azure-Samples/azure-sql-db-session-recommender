@@ -25,7 +25,7 @@ create table dbo.video_recording_abstract_embeddings
 )
 go
 
-create clustered index IXCC on dbo.video_recording_abstract_embeddings (video_recording_id, vector_value_id) 
+create clustered columnstore index IXCC on dbo.video_recording_abstract_embeddings with drop_existing
 go
 
 drop table if exists dbo.video_recordings_searched_text;

@@ -36,24 +36,22 @@ if (@retval != 0) begin
     return;
 end;
 
-select 
-    cast([key] as int) as [vector_value_id],
-    cast([value] as float) as [vector_value]
-into
-    #t
-from 
-    openjson(json_query(@response, '$.result.data[0].embedding'));
-
-create clustered index ixc on #t (vector_value_id);
-
-with cteSimilar as
+with cteSearch as
+(
+    select 
+        cast([key] as int) as [vector_value_id],
+        cast([value] as float) as [vector_value]
+    from 
+        openjson(json_query(@response, '$.result.data[0].embedding'))
+),
+cteSimilar as
 (
     select top (@top)
         v2.video_recording_id, 
         -- Optimized as per https://platform.openai.com/docs/guides/embeddings/which-distance-function-should-i-use
         sum(v1.[vector_value] * v2.[vector_value]) as cosine_similarity
     from 
-        #t v1
+        cteSearch v1
     inner join 
         dbo.video_recording_abstract_embeddings v2 on v1.vector_value_id = v2.vector_value_id
     group by
