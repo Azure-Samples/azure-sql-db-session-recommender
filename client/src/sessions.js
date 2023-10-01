@@ -11,10 +11,20 @@ export async function getSessions(content) {
   };
 
   const response = await fetch("/data-api/rest/FindRelatedSessions", settings);
-  if (!response.ok) return '[]';
-  const data = await response.json();
+  if (!response.ok) {
+    return { 
+      sessions: '[]', 
+      errorInfo: {
+        errorSource: 'Server',
+        errorCode: response.status,
+        errorMessage: response.statusText
+    }};
+  };
+  
   var sessions = []; 
   var errorInfo = null;
+  const data = await response.json();
+
   if (data.value.length > 0) {
     if (data.value[0].error_code) {
         errorInfo = {

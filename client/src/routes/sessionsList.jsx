@@ -6,7 +6,11 @@ export async function loader({ request }) {
     const url = new URL(request.url);
     const searchQuery = url.searchParams.get("q") ?? "";
     var isSearch = (searchQuery == "") ? false : true;
-    const {sessions, errorInfo} = isSearch ? await getSessions(searchQuery) : {sessions:[], errorInfo:null};
+    const { sessions, errorInfo } = isSearch ? await getSessions(searchQuery) : {sessions:[], errorInfo:null};
+    if (!Array.isArray(sessions)) { 
+        errorInfo = { errorMessage: "Error: sessions is not an array" };
+        sessions = [];
+    }
     return { sessions, searchQuery, isSearch, errorInfo };
 }
 
