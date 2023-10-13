@@ -1,6 +1,10 @@
-create or alter procedure dbo.stp_StoreSession
+ALTER   procedure [dbo].[stp_StoreSession]
 @title nvarchar(200),
-@abstract nvarchar(max)
+@abstract nvarchar(max),
+@session_id uniqueidentifier, 
+@topic_id uniqueidentifier, 
+@code varchar(50), 
+@tid varchar(50)
 as
 set nocount on
 
@@ -8,8 +12,9 @@ declare @th as binary(64) = hashbytes('sha2_512', @title);
 declare @ah as binary(64) = hashbytes('sha2_512', @abstract);
 
 if (exists (select * from dbo.Sessions where title_hash = @th and abstract_hash = @ah)) begin
-    print 'Session already exists';
-    return;
+    print '> Session already exists';
+    update dbo.Sessions set last_seen_in_source_data = sysdatetime() where title_hash = @th and abstract_hash = @ah
+    return -1;
 end
 
 /*
@@ -54,9 +59,14 @@ select @id = id from dbo.Sessions where title = @title;
 if (@id is null)
 begin
     set @id = next value for dbo.GlobalId;
-    insert into dbo.Sessions (id, title, abstract, title_hash, abstract_hash) values (@id, @title, @abstract, @th, @ah)
+    insert into dbo.Sessions (id, title, abstract, title_hash, abstract_hash, last_seen_in_source_data, session_id, topic_id, tid, code) 
+    values (@id, @title, @abstract, @th, @ah, sysutcdatetime(), @session_id, @topic_id, @tid, @code)
 end else begin
-    update dbo.Sessions set title = @title, abstract = @abstract, title_hash = @th, abstract_hash = @ah where id = @id
+    update dbo.Sessions set
+         title = @title, abstract = @abstract, title_hash = @th, abstract_hash = @ah, 
+         last_seen_in_source_data = sysutcdatetime(), session_id = @session_id, topic_id = @topic_id, 
+         tid = @tid, code = @code
+    where id = @id
     delete from dbo.SessionAbstractEmbeddings where session_id = @id
 end
 
@@ -68,3 +78,4 @@ from
     #t
 
 commit tran;
+GO

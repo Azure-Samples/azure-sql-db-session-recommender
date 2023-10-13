@@ -54,7 +54,7 @@ export default function SessionsList() {
                     <ul>
                         {sessions.map((session) => (
                             <li key={session.id}>
-                                <h2>{session.title}</h2>
+                                <h2><a href={"https://airlift23.msftevents.io/sessions/details/" + session.topic_id} target="_blank">{session.title}</a></h2>
                                 <h4>Score: {(session.cosine_similarity * 100).toFixed(2)}%</h4>
                                 <div id="abstract">
                                     {session.abstract}

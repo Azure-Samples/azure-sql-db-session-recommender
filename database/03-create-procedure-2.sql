@@ -1,11 +1,15 @@
-create or alter procedure dbo.stp_FindRelatedSessions
+CREATE   procedure [dbo].[stp_FindRelatedSessions]
 @text nvarchar(max),
 @top int = 10,
 @min_similarity decimal(19,16) = 0.65
 as
 if (@text is null) return;
 
+declare @sid int;
 insert into dbo.SearchedText (searched_text) values (@text);
+set @sid = scope_identity()
+
+declare @start_time datetime2 = sysdatetime();
 
 declare @retval int, @response nvarchar(max);
 declare @payload nvarchar(max);
@@ -36,6 +40,9 @@ if (@retval != 0) begin
     return;
 end;
 
+declare @end_time_1 datetime2 = sysdatetime();
+update SearchedText set ms_rest_call = datediff(ms, @start_time, @end_time_1) where id = @sid;
+
 with cteVector as
 (
     select 
@@ -63,6 +70,10 @@ select
     a.id,
     a.title,
     a.abstract,
+    a.code,
+    a.tid,
+    a.session_id,
+    a.topic_id,
     r.cosine_similarity
 from 
     cteSimilar r
@@ -71,5 +82,9 @@ inner join
 where   
     r.cosine_similarity > @min_similarity
 order by    
-    r.cosine_similarity desc
-go
+    r.cosine_similarity desc;
+
+declare @end_time_2 datetime2 = sysdatetime();
+update SearchedText set ms_vector_search = datediff(ms, @end_time_1, @end_time_2) where id = @sid;
+
+GO
