@@ -23,7 +23,7 @@ export default function Root() {
           }
         </div>
         <p>
-          Use OpenAI to search for interesting sessions. Write the topic you're interested in, and (up to) the top ten most interesting and related session will be returned.         
+          Use OpenAI to search for interesting sessions. Write the topic you're interested in, and (up to) the top ten most interesting and related session (<i>based on the abstract only</i>) will be returned.         
           The search is done using <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models">text embeddings</a> and then using <a href="https://en.wikipedia.org/wiki/Cosine_similarity" target="_blank">cosine similarity</a> to find the most similar sessions.
         </p>
         <p>There are {sessionsCount} sessions indexed so far.</p>
