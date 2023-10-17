@@ -1,3 +1,15 @@
+:setvar OpenAIUrl https://.openai.azure.com
+:setvar OpenAIKey 
+
+/*
+    Enable change tracking on the database
+*/
+if not exists(select * from sys.change_tracking_databases where database_id = db_id()) begin
+    declare @sql nvarchar(max) = 'alter database ' + quotename(db_name()) + ' set change_tracking = on (change_retention = 2 days, auto_cleanup = on)'
+    exec(@sql)
+end
+go
+
 /*
     Create database master key
 */
@@ -10,20 +22,14 @@ go
 /*
     Create database credentials to store API key
 */
-if exists(select * from sys.[database_scoped_credentials] where name = '$(OpenAI.Url)')
+if exists(select * from sys.[database_scoped_credentials] where name = '$(OpenAIUrl)')
 begin
-	drop database scoped credential [$(OpenAI.Url)];
+	drop database scoped credential [$(OpenAIUrl)];
 end
 go
 
-create database scoped credential [$(OpenAI.Url)]
-with identity = 'HTTPEndpointHeaders', secret = '{"api-key":"$(OpenAI.Key)"}';
-go
-
-/*
-    Enable change tracking on the database
-*/
-alter database SessionRecommender set change_tracking = on (change_retention = 2 days, auto_cleanup = on)
+create database scoped credential [$(OpenAIUrl)]
+with identity = 'HTTPEndpointHeaders', secret = '{"api-key":"$(OpenAIKey)"}';
 go
 
 /*
@@ -97,9 +103,9 @@ set @payload = json_object('input': @text);
 
 begin try
     exec @retval = sp_invoke_external_rest_endpoint
-        @url = '$(OpenAI.Url)/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
+        @url = '$(OpenAIUrl)/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
-        @credential = [$(OpenAI.Url)],
+        @credential = [$(OpenAIUrl)],
         @payload = @payload,
         @response = @response output;
 end try
