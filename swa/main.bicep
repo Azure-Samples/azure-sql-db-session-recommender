@@ -14,11 +14,9 @@ resource session_recommender_swa 'Microsoft.Web/staticSites@2022-09-01' = {
     branch: 'main'
     repositoryToken: repositoryToken
     buildProperties: {
-      githubActionSecretNameOverride: 'AZURE_STATIC_WEB_APPS_API_TOKEN'
-      skipGithubActionWorkflowGeneration: true
-      appLocation: '/client'
+      appLocation: '/swa/client'
       apiLocation: ''
-      appArtifactLocation: '/dist'
+      appArtifactLocation: '/swa/dist'
     }
   }
   sku: {
