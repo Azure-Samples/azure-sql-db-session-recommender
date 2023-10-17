@@ -1,157 +1,599 @@
-html {
-  box-sizing: border-box;
+
+*, 
+*::before, 
+*::after {
+    box-sizing: border-box;    
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
+html:focus,
+html:focus-within {
+    scroll-behavior: smooth;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
 }
 
-html,
+img, 
+picture, 
+video, 
+canvas, 
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input, 
+button, 
+textarea, 
+select {
+    font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+    html:focus,
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Design tokens */
+:root {
+	--color-midnight-blue-primary: #190649ff;
+	--color-midnight-blue-shade-10: #14053aff;
+	--color-midnight-blue-shade-20: #0f042cff;
+	--color-brand-purple-primary: #512bd4ff;
+	--color-brand-purple-shade-10: #4122aaff;
+	--color-brand-purple-shade-20: #311a7fff;
+	--color-brand-purple-shade-30: #201155ff;
+	--color-brand-purple-shade-35: #180d40ff;
+	--color-brand-purple-shade-40: #10092aff;
+	--color-brand-purple-shade-45: #080415ff;
+	--color-brand-purple-tint-10: #7455ddff;
+	--color-brand-purple-tint-20: #9780e5ff;
+	--color-brand-purple-tint-25: #ac99eaff;
+	--color-brand-purple-tint-30: #b9aaeeff;
+	--color-brand-purple-tint-35: #cbbff2ff;
+	--color-brand-purple-tint-40: #dcd5f6ff;
+	--color-brand-purple-tint-45: #eeeafbff;
+	--color-cyan-primary: #28c2d1ff;
+	--color-cyan-shade-10: #209ba7ff;
+	--color-cyan-shade-20: #18747dff;
+	--color-cyan-shade-30: #104e54ff;
+	--color-cyan-shade-35: #0c3a3fff;
+	--color-cyan-shade-40: #08272aff;
+	--color-cyan-shade-45: #041315ff;
+	--color-cyan-tint-10: #53cedaff;
+	--color-cyan-tint-20: #7edae3ff;
+	--color-cyan-tint-30: #a9e7edff;
+	--color-cyan-tint-35: #beedf1ff;
+	--color-cyan-tint-40: #d4f3f6ff;
+	--color-cyan-tint-45: #e9f9faff;
+	--color-blue-primary: #0b6cffff;
+	--color-blue-shade-10: #0956ccff;
+	--color-blue-shade-20: #074199ff;
+	--color-blue-shade-30: #042b66ff;
+	--color-blue-shade-35: #03204dff;
+	--color-blue-shade-40: #021633ff;
+	--color-blue-shade-45: #010b1aff;
+	--color-blue-tint-10: #3c89ffff;
+	--color-blue-tint-20: #6da7ffff;
+	--color-blue-tint-30: #9dc4ffff;
+	--color-blue-tint-35: #b6d3ffff;
+	--color-blue-tint-40: #cee2ffff;
+	--color-blue-tint-45: #e7f0ffff;
+	--color-flamingo-primary: #f65163ff;
+	--color-flamingo-shade-10: #cb4150ff;
+	--color-flamingo-shade-20: #a0313dff;
+	--color-flamingo-shade-30: #74222bff;
+	--color-flamingo-shade-35: #5f1a21ff;
+	--color-flamingo-shade-40: #491218ff;
+	--color-flamingo-shade-45: #340a0eff;
+	--color-flamingo-tint-10: #f87482ff;
+	--color-flamingo-tint-20: #fa97a1ff;
+	--color-flamingo-tint-30: #fbb9c1ff;
+	--color-flamingo-tint-35: #fccbd0ff;
+	--color-flamingo-tint-40: #fddce0ff;
+	--color-flamingo-tint-45: #feeeefff;
+	--color-magenta-primary: #d600aaff;
+	--color-magenta-shade-10: #ab0088ff;
+	--color-magenta-shade-20: #800066ff;
+	--color-magenta-shade-30: #560044ff;
+	--color-magenta-shade-35: #400033ff;
+	--color-magenta-shade-40: #2b0022ff;
+	--color-magenta-shade-45: #150011ff;
+	--color-magenta-tint-10: #de33bbff;
+	--color-magenta-tint-20: #e666ccff;
+	--color-magenta-tint-30: #ef99ddff;
+	--color-magenta-tint-35: #f3b2e5ff;
+	--color-magenta-tint-40: #f7cceeff;
+	--color-magenta-tint-45: #fbe5f6ff;
+	--color-yellow-primary: #f7b548ff;
+	--color-yellow-shade-10: #ca943aff;
+	--color-yellow-shade-20: #9d722cff;
+	--color-yellow-shade-30: #70511dff;
+	--color-yellow-shade-35: #5a4016ff;
+	--color-yellow-shade-40: #432f0fff;
+	--color-yellow-shade-45: #2d1f08ff;
+	--color-yellow-tint-10: #f9c46dff;
+	--color-yellow-tint-20: #fad391ff;
+	--color-yellow-tint-30: #fce1b6ff;
+	--color-yellow-tint-35: #fde9c8ff;
+	--color-yellow-tint-40: #fdf0daff;
+	--color-yellow-tint-46: #fef8edff;
+	--color-neutrals-dark-black: #000000ff;
+	--color-neutrals-dark-grey-4: #0a0a0aff;
+	--color-neutrals-dark-grey-8: #141414ff;
+	--color-neutrals-dark-grey-24: #3d3d3dff;
+	--color-neutrals-dark-grey-36: #5c5c5cff;
+	--color-neutrals-dark-grey-40: #666666ff;
+	--color-neutrals-dark-grey-52: #858585ff;
+	--color-neutrals-dark-grey-68: #adadadff;
+	--color-neutrals-dark-grey-84: #d6d6d6ff;
+	--color-neutrals-additionals-grey-2: #050505ff;
+	--color-neutrals-additionals-grey-6: #0f0f0fff;
+	--color-neutrals-additionals-grey-10: #1a1a1aff;
+	--color-neutrals-additionals-grey-12: #1f1f1fff;
+	--color-neutrals-additionals-grey-16: #292929ff;
+	--color-neutrals-additionals-grey-18: #2e2e2eff;
+	--color-neutrals-additionals-grey-20: #333333ff;
+	--color-neutrals-additionals-grey-22: #383838ff;
+	--color-neutrals-additionals-grey-28: #474747ff;
+	--color-neutrals-additionals-grey-30: #4d4d4dff;
+	--color-neutrals-additionals-grey-32: #525252ff;
+	--color-neutrals-additionals-grey-34: #575757ff;
+	--color-neutrals-additionals-grey-42: #6b6b6bff;
+	--color-neutrals-additionals-grey-44: #707070ff;
+	--color-neutrals-additionals-grey-46: #757575ff;
+	--color-neutrals-additionals-grey-48: #7a7a7aff;
+	--color-neutrals-additionals-grey-54: #8a8a8aff;
+	--color-neutrals-additionals-grey-56: #8f8f8fff;
+	--color-neutrals-additionals-grey-58: #949494ff;
+	--color-neutrals-additionals-grey-60: #999999ff;
+	--color-neutrals-additionals-grey-62: #9e9e9eff;
+	--color-neutrals-additionals-grey-64: #a3a3a3ff;
+	--color-neutrals-additionals-grey-66: #a8a8a8ff;
+	--color-neutrals-additionals-grey-70: #b2b2b2ff;
+	--color-neutrals-additionals-grey-72: #b8b8b8ff;
+	--color-neutrals-additionals-grey-76: #c2c2c2ff;
+	--color-neutrals-additionals-grey-78: #c7c7c7ff;
+	--color-neutrals-additionals-grey-80: #ccccccff;
+	--color-neutrals-additionals-grey-86: #dbdbdbff;
+	--color-neutrals-additionals-grey-90: #e5e5e5ff;
+	--color-neutrals-light-grey-14: #242424ff;
+	--color-neutrals-light-grey-26: #424242ff;
+	--color-neutrals-light-grey-38: #616161ff;
+	--color-neutrals-light-grey-50: #808080ff;
+	--color-neutrals-light-grey-74: #bdbdbdff;
+	--color-neutrals-light-grey-82: #d1d1d1ff;
+	--color-neutrals-light-grey-88: #e0e0e0ff;
+	--color-neutrals-light-grey-90: #ebebebff;
+	--color-neutrals-light-grey-94: #f0f0f0ff;
+	--color-neutrals-light-grey-96: #f5f5f5ff;
+	--color-neutrals-light-grey-98: #fafafaff;
+	--color-neutrals-light-white: #ffffffff;
+	--color-information-blue: #005fb7ff;
+	--color-information-dark-green: #0f7b0fff;
+	--color-information-light-green: #dff6ddff;
+	--color-information-dark-red: #c42b1cff;
+	--color-information-light-red: #fde7e9ff;
+	--color-information-dark-green: #052505ff;
+	--color-information-dark-red: #3f1011ff;
+	--color-gradients-light-theme-multi-color-gradients-purple-magenta: linear-gradient(to bottom, #512bd451 0%, #d600aad6 100%);
+	--color-gradients-light-theme-multi-color-gradients-magenta-flamingo: linear-gradient(to bottom, #d600aad6 0%, #cb4150cb 100%);
+	--color-gradients-light-theme-multi-color-gradients-magenta-flamingo-webkit: -webkit-linear-gradient(to bottom, #d600aad6 0%, #cb4150cb 100%);
+	--color-gradients-light-theme-multi-color-gradients-flamingo-purple: linear-gradient(to bottom, #cb4150cb 0%, #512bd451 100%);
+	--color-gradients-light-theme-multi-color-gradients-purple-blue: linear-gradient(to bottom, #512bd451 0%, #0b6cff0b 100%);
+	--color-gradients-light-theme-multi-color-gradients-blue-purple: linear-gradient(to bottom, #0b6cff0b 0%, #512bd451 100%);
+	--color-gradients-light-theme-magenta-purple-primary: linear-gradient(to bottom, #d600aad6 0%, #512bd451 100%);
+	--color-gradients-light-theme-magenta-purple-primary-webkit: -webkit-linear-gradient(to bottom, #d600aad6 0%, #512bd451 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-01: linear-gradient(to bottom, #d600aad6 0%, #b80ab3b8 85.4%);
+	--color-gradients-light-theme-magenta-purple-gradient-02: linear-gradient(to bottom, #b80ab3b8 0%, #9b13bd9b 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-03: linear-gradient(to bottom, #9b13bd9b 0%, #7d1dc67d 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-04: linear-gradient(to bottom, #7d1dc67d 0%, #512bd451 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-05: linear-gradient(to bottom, #512bd451 0%, #7d1dc67d 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-06: linear-gradient(to bottom, #7d1dc67d 0%, #9b13bd9b 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-07: linear-gradient(to bottom, #9b13bd9b 0%, #b80ab3b8 100%);
+	--color-gradients-light-theme-magenta-purple-gradient-08: linear-gradient(to bottom, #b80ab3b8 0%, #d600aad6 100%);
+	--color-gradients-light-theme-blue-purple-primary: linear-gradient(to bottom, #0b6cff0b 0%, #512bd451 100%);
+	--color-gradients-light-theme-blue-purple-gradient-01: linear-gradient(to bottom, #0b6cff0b 0%, #1c5cf41c 85.4%);
+	--color-gradients-light-theme-blue-purple-gradient-02: linear-gradient(to bottom, #1c5cf41c 0%, #2e4cea2e 100%);
+	--color-gradients-light-theme-blue-purple-gradient-03: linear-gradient(to bottom, #2e4cea2e 0%, #403bdf40 100%);
+	--color-gradients-light-theme-blue-purple-gradient-04: linear-gradient(to bottom, #403bdf40 0%, #512bd451 100%, #512bd451 100%);
+	--color-gradients-light-theme-blue-purple-gradient-05: linear-gradient(to bottom, #512bd451 0%, #403bdf40 100%);
+	--color-gradients-light-theme-blue-purple-gradient-06: linear-gradient(to bottom, #403bdf40 0%, #2e4cea2e 100%);
+	--color-gradients-light-theme-blue-purple-gradient-07: linear-gradient(to bottom, #2e4cea2e 0%, #1c5cf41c 100%);
+	--color-gradients-light-theme-blue-purple-gradient-08: linear-gradient(to bottom, #1c5cf41c 0%, #0b6cff0b 100%);
+	--color-gradients-dark-theme-multi-color-gradients-text-graphic-elements-only-purple-magenta: linear-gradient(to bottom, #9780e597 0%, #de33bbde 100%);
+	--color-gradients-dark-theme-multi-color-gradients-text-graphic-elements-only-purple-magenta-webkit: -webkit-linear-gradient(to bottom, #9780e597 0%, #de33bbde 100%);
+	--color-gradients-dark-theme-multi-color-gradients-text-graphic-elements-only-magenta-flamingo: linear-gradient(to bottom, #de33bbde 0%, #f65163f6 100%);
+	--color-gradients-dark-theme-multi-color-gradients-text-graphic-elements-only-flamingo-purple: linear-gradient(to bottom, #f65163f6 0%, #9780e597 100%);
+	--color-gradients-dark-theme-multi-color-gradients-text-graphic-elements-only-purple-cyan: linear-gradient(to bottom, #9780e597 0%, #53ceda53 100%);
+	--color-gradients-dark-theme-multi-color-gradients-text-graphic-elements-only-cyan-purple: linear-gradient(to bottom, #53ceda53 0%, #9780e597 100%);
+	--color-gradients-dark-theme-magenta-purple-primary: linear-gradient(to bottom, #d600aad6 0%, #7455dd74 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-02: linear-gradient(to bottom, #be15b7be 0%, #a52bc4a5 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-01: linear-gradient(to bottom, #d600aad6 0%, #be15b7be 85.4%);
+	--color-gradients-dark-theme-magenta-purple-gradient-03: linear-gradient(to bottom, #a52bc4a5 0%, #8d40d08d 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-04: linear-gradient(to bottom, #8d40d08d 0%, #7455dd74 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-05: linear-gradient(to bottom, #7455dd74 0%, #8d40d08d 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-06: linear-gradient(to bottom, #8d40d08d 0%, #a52bc4a5 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-07: linear-gradient(to bottom, #a52bc4a5 0%, #be15b7be 100%);
+	--color-gradients-dark-theme-magenta-purple-gradient-08: linear-gradient(to bottom, #be15b7be 0%, #d600aad6 100%);
+	--color-gradients-dark-theme-blue-purple-primary: linear-gradient(to bottom, #0b6cff0b 0%, #7455dd74 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-01: linear-gradient(to bottom, #0b6cff0b 0%, #2566f625 85.4%);
+	--color-gradients-dark-theme-blue-purple-gradient-02: linear-gradient(to bottom, #2566f625 0%, #4060ee40 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-03: linear-gradient(to bottom, #4060ee40 0%, #5b5ae55b 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-04: linear-gradient(to bottom, #5b5ae55b 0%, #7455dd74 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-05: linear-gradient(to bottom, #7455dd74 0%, #5b5ae55b 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-06: linear-gradient(to bottom, #5b5ae55b 0%, #4060ee40 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-07: linear-gradient(to bottom, #4060ee40 0%, #2566f625 100%);
+	--color-gradients-dark-theme-blue-purple-gradient-08: linear-gradient(to bottom, #2566f625 0%, #0b6cff0b 100%);
+	--color-speaker-cards-image-backplate-light-theme: linear-gradient(to bottom, #ffffffff 40.71%, #ffffffff 100%);
+	--color-speaker-cards-image-backplate-dark-theme: linear-gradient(to bottom, #2e2e2e2e 40.71%, #2e2e2e2e 100%);
+	--base-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--title-font-family: "Space Grotesk", Helvetica, Arial, sans-serif;
+	--content-width-desktop: 1248px;
+	--content-width-tablet: 792px;
+	--content-width-mobile: 300px;
+	/* This ensures that even when a screen width is exactly the size of a content 
+    break point there is still some padding between the viewport and content. */
+	--content-width-padding-desktop: 40px;
+	--content-width-padding-tablet: 30px;
+	--content-width-padding-mobile: 20px;
+	--grid-template-desktop: repeat(12, 1fr);
+	--grid-template-tablet: repeat(12, 1fr);
+	--grid-template-mobile: repeat(6, 1fr);
+	--grid-gap-desktop: 48px;
+	--grid-gap-tablet: 24px;
+	--grid-gap-mobile: 12px;
+	/* This defines the vertical spacing between sections of content on any given page 
+    (and is also used as the row gap for grids) */
+	--vertical-gap-desktop: 60px;
+	--vertical-gap-tablet: 32px;
+	--vertical-gap-mobile: 32px;
+	--corner-radius-xs: 8px;
+	--corner-radius-sm: 12px;
+	--corner-radius-md: 16px;
+	--corner-radius-lg: 20px;
+	--corner-radius-xl: 32px;
+	/* --outline-corner-radius: calc(outline-offset + child-corner-radius); */
+
+	--color-foreground: var(--color-neutrals-additionals-grey-20);
+	--color-background: var(--color-neutrals-light-grey-98);
+	--color-title-font: var(--color-midnight-blue-primary);
+	--color-navbar-menu-icon-fill: var(--color-brand-purple-primary);
+	--color-footer-foreground: var(--color-neutrals-dark-grey-24);
+	--color-footer-background: var(--color-neutrals-light-grey-90);
+	--color-primary-gradient: linear-gradient(to bottom right, #512BD4, #D600AA);
+	--color-primary-gradient-webkit: -webkit-linear-gradient(to bottom right, #512BD4, #D600AA);
+	--gradient-featured-speaker-card-01: linear-gradient(to bottom, #be15b7be 0%, #a52bc4a5 100%);
+	--gradient-featured-speaker-card-02: linear-gradient(to bottom, #d600aad6 0%, #be15b7be 85.4%);
+	--gradient-featured-speaker-card-03: linear-gradient(to bottom, #a52bc4a5 0%, #8d40d08d 100%);
+	--gradient-featured-speaker-card-04: linear-gradient(to bottom, #8d40d08d 0%, #7455dd74 100%);
+	--gradient-featured-speaker-card-05: linear-gradient(to bottom, #7455dd74 0%, #8d40d08d 100%);
+	--gradient-featured-speaker-card-06: linear-gradient(to bottom, #8d40d08d 0%, #a52bc4a5 100%);
+	--featured-speaker-card-foreground: var(--color-neutrals-light-white);
+	--color-link-foreground: #115EA3;
+	--color-link-foreground-hover: #0F548C;
+	--color-link-foreground-active: #0C3B5E;
+	--color-cookie-banner-foreground: var(--color-foreground);
+	--color-cookie-banner-background: var(--color-neutrals-light-white);
+	--color-cookie-border: var(--color-brand-purple-primary);
+	--dotnet-btn-corner-radius: var(--corner-radius-xs);
+	--dotnet-btn-border-width: 2px;
+	--color-dotnet-btn-focus-outline: var(--color-neutrals-dark-black);
+	--dotnet-btn-focus-outline-width: 2px;
+	--dotnet-btn-focus-outline-offset: 1px;
+	--color-dotnet-solid-btn-accent-foreground: var(--color-neutrals-light-white);
+	--color-dotnet-solid-btn-accent-background: var(--color-brand-purple-primary);
+	--color-dotnet-solid-btn-accent-border: var(--color-brand-purple-primary);
+	--color-dotnet-solid-btn-accent-foreground-hover: var(--color-neutrals-light-white);
+	--color-dotnet-solid-btn-accent-background-hover: var(--color-brand-purple-shade-10);
+	--color-dotnet-solid-btn-accent-border-hover: var(--color-brand-purple-shade-10);
+	--color-dotnet-solid-btn-accent-foreground-active: var(--color-neutrals-light-white);
+	--color-dotnet-solid-btn-accent-background-active: var(--color-brand-purple-shade-20);
+	--color-dotnet-solid-btn-accent-border-active: var(--color-brand-purple-shade-20);
+	--color-dotnet-outline-btn-accent-foreground: var(--color-brand-purple-primary);
+	--color-dotnet-outline-btn-accent-background: transparent;
+	--color-dotnet-outline-btn-accent-border: var(--color-brand-purple-primary);
+	--color-dotnet-outline-btn-accent-foreground-hover: var(--color-brand-purple-shade-10);
+	--color-dotnet-outline-btn-accent-background-hover: var(--color-brand-purple-tint-45);
+	--color-dotnet-outline-btn-accent-border-hover: var(--color-brand-purple-primary);
+	--color-dotnet-outline-btn-accent-foreground-active: var(--color-brand-purple-shade-20);
+	--color-dotnet-outline-btn-accent-background-active: var(--color-brand-purple-tint-40);
+	--color-dotnet-outline-btn-accent-border-active: var(--color-brand-purple-primary);
+	--color-dotnet-link-btn-accent-foreground: var(--color-brand-purple-primary);
+	--color-dotnet-link-btn-accent-background: transparent;
+	--color-dotnet-link-btn-accent-border: transparent;
+	--color-dotnet-link-btn-accent-foreground-hover: var(--color-brand-purple-shade-10);
+	--color-dotnet-link-btn-accent-background-hover: transparent;
+	--color-dotnet-link-btn-accent-border-hover: transparent;
+	--color-dotnet-link-btn-accent-foreground-active: var(--color-brand-purple-shade-20);
+	--color-dotnet-link-btn-accent-background-active: transparent;
+	--color-dotnet-link-btn-accent-border-active: transparent;
+	--color-dotnet-link-btn-neutral-foreground: var(--color-neutrals-dark-grey-24);
+	--color-dotnet-link-btn-neutral-background: transparent;
+	--color-dotnet-link-btn-neutral-border: transparent;
+	--color-dotnet-link-btn-neutral-foreground-hover: var(--color-neutrals-dark-grey-8);
+	--color-dotnet-link-btn-neutral-background-hover: transparent;
+	--color-dotnet-link-btn-neutral-border-hover: transparent;
+	--color-dotnet-link-btn-neutral-foreground-active: var(--color-neutrals-dark-grey-8);
+	--color-dotnet-link-btn-neutral-background-active: transparent;
+	--color-dotnet-link-btn-neutral-border-active: transparent;
+	--color-dotnet-menu-popover-focus-border: var(--color-neutrals-dark-black);
+	--color-dotnet-menu-popover-foreground: var(--color-neutrals-additionals-grey-28);
+	--color-dotnet-menu-popover-background: var(--color-neutrals-light-white);
+	--color-dotnet-menu-popover-foreground-hover: var(--color-neutrals-light-grey-26);
+	--color-dotnet-menu-popover-background-hover: var(--color-neutrals-light-grey-96);
+	--color-dotnet-menu-popover-foreground-active: var(--color-neutrals-light-grey-88);
+	--color-dotnet-menu-popover-background-active: var(--color-neutrals-light-grey-26);
+	--color-dotnet-content-region-background: var(--color-neutrals-light-white);
+	--dotnet-speaker-card-foreground: var(--color-neutrals-light-grey-38);
+	--dotnet-speaker-card-background: var(--color-neutrals-light-white);
+	--dotnet-speaker-card-box-shadow: 0 2px 10px 4px rgba(0, 0, 0, 0.04);
+	--dotnet-speaker-card-box-shadow-hover: 0 2px 10px 4px rgba(0, 0, 0, 0.2);
+	--color-agenda-time: var(--color-neutrals-dark-grey-40);
+	--color-agenda-summaries: var(--color-neutrals-dark-grey-18);
+	--color-agenda-speaker: var(--color-brand-purple-shade-20);
+	--color-local-events-date: var(--color-neutrals-dark-grey-24);
+	--color-form-input-foreground: var(--color-foreground);
+	--color-form-input-background: var(--color-neutrals-light-white);
+	--color-form-input-border: var(--color-neutrals-light-grey-82);
+	--logo-dark-display: none;
+	--logo-light-display: block;
+}
+
+/* Dark mode design tokens */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-foreground: var(--color-neutrals-additionals-grey-90);
+		--color-background: var(--color-neutrals-additionals-grey-12);
+		--color-title-font: var(--color-neutrals-light-white);
+		--color-navbar-menu-icon-fill: var(--color-brand-purple-tint-30);
+		--color-footer-foreground: var(--color-neutrals-additionals-grey-90);
+		--color-footer-background: var(--color-neutrals-additionals-grey-18);
+		--color-primary-gradient: linear-gradient(to bottom right, #9780E5, #DE33BB);
+		--color-primary-gradient-webkit: -webkit-linear-gradient(to bottom right, #9780E5, #DE33BB);
+		--gradient-featured-speaker-card-01: linear-gradient(to bottom, #d600aad6 0%, #b80ab3b8 85.4%);
+		--gradient-featured-speaker-card-02: linear-gradient(to bottom, #b80ab3b8 0%, #9b13bd9b 100%);
+		--gradient-featured-speaker-card-03: linear-gradient(to bottom, #9b13bd9b 0%, #7d1dc67d 100%);
+		--gradient-featured-speaker-card-04: linear-gradient(to bottom, #7d1dc67d 0%, #512bd451 100%);
+		--gradient-featured-speaker-card-05: linear-gradient(to bottom, #512bd451 0%, #7d1dc67d 100%);
+		--gradient-featured-speaker-card-06: linear-gradient(to bottom, #7d1dc67d 0%, #9b13bd9b 100%);
+		--featured-speaker-card-foreground: var(--color-midnight-blue-primary);
+		--color-link-foreground: #479EF5;
+		--color-link-foreground-hover: #62ABF5;
+		--color-link-foreground-active: #2886DE;
+		--color-cookie-banner-foreground: var(--color-foreground);
+		--color-cookie-banner-background: var(--color-neutrals-additionals-grey-16);
+		--color-cookie-border: var(--color-brand-purple-tint-30);
+		--color-dotnet-btn-focus-outline: var(--color-neutrals-light-white);
+		--color-dotnet-solid-btn-accent-foreground: var(--color-neutrals-dark-grey-8);
+		--color-dotnet-solid-btn-accent-background: var(--color-brand-purple-tint-25);
+		--color-dotnet-solid-btn-accent-border: var(--color-brand-purple-tint-25);
+		--color-dotnet-solid-btn-accent-foreground-hover: var(--color-neutrals-dark-grey-8);
+		--color-dotnet-solid-btn-accent-background-hover: var(--color-brand-purple-tint-30);
+		--color-dotnet-solid-btn-accent-border-hover: var(--color-brand-purple-tint-30);
+		--color-dotnet-solid-btn-accent-foreground-active: var(--color-neutrals-dark-grey-8);
+		--color-dotnet-solid-btn-accent-background-active: var(--color-brand-purple-tint-35);
+		--color-dotnet-solid-btn-accent-border-active: var(--color-brand-purple-tint-35);
+		--color-dotnet-outline-btn-accent-foreground: var(--color-brand-purple-tint-25);
+		--color-dotnet-outline-btn-accent-background: transparent;
+		--color-dotnet-outline-btn-accent-border: var(--color-brand-purple-tint-25);
+		--color-dotnet-outline-btn-accent-foreground-hover: var(--color-brand-purple-tint-25);
+		--color-dotnet-outline-btn-accent-background-hover: var(--color-brand-purple-shade-35);
+		--color-dotnet-outline-btn-accent-border-hover: var(--color-brand-purple-tint-25);
+		--color-dotnet-outline-btn-accent-foreground-active: var(--color-brand-purple-tint-25);
+		--color-dotnet-outline-btn-accent-background-active: var(--color-brand-purple-shade-30);
+		--color-dotnet-outline-btn-accent-border-active: var(--color-brand-purple-tint-25);
+		--color-dotnet-link-btn-accent-foreground: var(--color-brand-purple-tint-25);
+		--color-dotnet-link-btn-accent-background: transparent;
+		--color-dotnet-link-btn-accent-border: transparent;
+		--color-dotnet-link-btn-accent-foreground-hover: var(--color-brand-purple-tint-30);
+		--color-dotnet-link-btn-accent-background-hover: transparent;
+		--color-dotnet-link-btn-accent-border-hover: transparent;
+		--color-dotnet-link-btn-accent-foreground-active: var(--color-brand-purple-tint-35);
+		--color-dotnet-link-btn-accent-background-active: transparent;
+		--color-dotnet-link-btn-accent-border-active: transparent;
+		--color-dotnet-link-btn-neutral-foreground: var(--color-neutrals-light-grey-96);
+		--color-dotnet-link-btn-neutral-background: transparent;
+		--color-dotnet-link-btn-neutral-border: transparent;
+		--color-dotnet-link-btn-neutral-foreground-hover: var(--color-neutrals-light-grey-98);
+		--color-dotnet-link-btn-neutral-background-hover: transparent;
+		--color-dotnet-link-btn-neutral-border-hover: transparent;
+		--color-dotnet-link-btn-neutral-foreground-active: var(--color-neutrals-light-white);
+		--color-dotnet-link-btn-neutral-background-active: transparent;
+		--color-dotnet-link-btn-neutral-border-active: transparent;
+		--color-dotnet-menu-popover-focus-border: var(--color-neutrals-light-white);
+		--color-dotnet-menu-popover-foreground: var(--color-neutrals-light-white);
+		--color-dotnet-menu-popover-background: var(--color-neutrals-additionals-grey-16);
+		--color-dotnet-menu-popover-foreground-hover: var(--color-neutrals-light-white);
+		--color-dotnet-menu-popover-background-hover: var(--color-neutrals-dark-grey-24);
+		--color-dotnet-menu-popover-foreground-active: var(--color-neutrals-light-white);
+		--color-dotnet-menu-popover-background-active: var(--color-neutrals-additionals-grey-28);
+		--color-dotnet-content-region-background: var(--color-neutrals-additionals-grey-16);
+		--dotnet-speaker-card-foreground: var(--color-neutrals-dark-grey-68);
+		--dotnet-speaker-card-background: var(--color-neutrals-additionals-grey-12);
+		--dotnet-speaker-card-box-shadow: 0 2px 10px 4px rgba(65, 65, 65, 0.2);
+		--dotnet-speaker-card-box-shadow-hover: 0 2px 10px 4px rgba(65, 65, 65, 0.8);
+		--color-agenda-time: var(--color-neutrals-dark-grey-68);
+		--color-agenda-summaries: var(--color-neutrals-dark-grey-70);
+		--color-agenda-speaker: var(--color-brand-purple-tint-35);
+		--color-local-events-date: var(--color-neutrals-dark-grey-84);
+		--color-form-input-foreground: var(--color-foreground);
+		--color-form-input-background: var(--color-neutrals-additionals-grey-16);
+		--color-form-input-border: var(--color-neutrals-dark-grey-36);
+		--logo-dark-display: block;
+		--logo-light-display: none;
+	}
+}
+
 body {
-  height: 100%;
-  margin: 0;
-  line-height: 1.5;
-  color: #121212;
+	-webkit-font-smoothing: antialiased;
+	font-family: var(--base-font-family);
+	color: var(--color-foreground);
+	background-color: var(--color-background);
+	-moz-osx-font-smoothing: grayscale;
+	margin-top: 2rem;
+	margin-left: 3rem;
+	margin-right: 3rem;
 }
 
 textarea,
 input,
 button {
-  font-size: 1rem;
-  font-family: inherit;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
-  background-color: white;
-  line-height: 1.5;
-  margin: 0;
+	font-size: 1rem;
+	font-family: inherit;
+	border: none;
+	border-radius: 8px;
+	padding: 0.5rem 0.75rem;
+	box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+	background-color: white;
+	line-height: 1.5;
+	margin: 0;
 }
 
 button {
-  color: #3992ff;
-  font-weight: 500;
+	color: var(--color-dotnet-solid-btn-accent-foreground);
+	border-color: var(--color-dotnet-outline-btn-accent-border);
+	background-color: var(--color-dotnet-solid-btn-accent-background);	
 }
 
 textarea:hover,
 input:hover,
 button:hover {
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+	box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
 }
 
 button:active {
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
-  transform: translateY(1px);
+	box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+	transform: translateY(1px);
 }
 
 #root {
-  height: 100%;
-  width: 100%;
-}
-
-#header>* {
-  padding-left: 2rem;
-  padding-right: 2rem;
+	height: 100%;
+	width: 100%;
 }
 
 #error>* {
-  color: red;
-  padding-left: 2rem;
-  padding-right: 2rem;
+	color: red;
+	padding-left: 2rem;
+	padding-right: 2rem;
 }
 
-#loginAlert {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-#searchbox>* {
-  padding-left: 2rem;
-  padding-right: 2rem;
+#searchbox {
+	padding-left: 2rem;
+	padding-right: 2rem;	
 }
 
 #searchbox>div form {
-  position: relative;
+	position: relative;
 }
 
 #searchbox>div form input[type="search"] {
-  width: 100%;
-  padding-left: 2rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='%23999' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 0.625rem 0.75rem;
-  background-size: 1rem;
-  position: relative;
+	width: 100%;
+	padding-left: 2rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='%23999' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: 0.625rem 0.75rem;
+	background-size: 1rem;
+	position: relative;
 }
 
 #searchbox>div form input[type="search"].loading {
-  background-image: none;
+	background-image: none;
 }
 
 #searchbox>div form button {
-  margin-left: 1rem;
-  margin-top: 1rem;
+	margin-left: 1rem;
+	margin-top: 1rem;
 }
 
 #search-spinner {
-  width: 1rem;
-  height: 1rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23000' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M20 4v5h-.582m0 0a8.001 8.001 0 00-15.356 2m15.356-2H15M4 20v-5h.581m0 0a8.003 8.003 0 0015.357-2M4.581 15H9' /%3E%3C/svg%3E");
-  animation: spin 1s infinite linear;
-  position: absolute;
-  left: 0.625rem;
-  top: 0.75rem;
+	width: 1rem;
+	height: 1rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23000' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M20 4v5h-.582m0 0a8.001 8.001 0 00-15.356 2m15.356-2H15M4 20v-5h.581m0 0a8.003 8.003 0 0015.357-2M4.581 15H9' /%3E%3C/svg%3E");
+	animation: spin 1s infinite linear;
+	position: absolute;
+	left: 0.625rem;
+	top: 0.75rem;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
 
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-#sessions {
-  width: 100%;
-  padding-right: 2rem;
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 #sessions.loading {
-  opacity: 0.25;
-  transition: opacity 200ms;
-  transition-delay: 200ms;
+	opacity: 0.25;
+	transition: opacity 200ms;
+	transition-delay: 200ms;
 }
 
-#sessions ul {
-  list-style: none;
+.font-title-2 {
+	font-size: 1.75rem;
+	font-family: var(--title-font-family);
+	font-weight: 700;
+	font-style: normal;
+	line-height: 2.5rem;
+	text-decoration: none;
+	text-transform: none;
+	color: var(--color-title-font);
 }
 
-
-#sessions p {
-  text-align: center;
+.font-subtitle-2 {
+	font-size: 1.125rem;
+	font-family: var(--base-font-family);
+	font-weight: 600;
+	font-style: normal;
+	line-height: 1.688rem;
+	margin-top: -0.1rem;
+	text-decoration: none;
+	text-transform: none;
+	color: var(--color-title-font);
 }
 
-#sessions h4 {
-  margin-top: -1.5rem;
-  background: lightblue;
-  text-align: center;
-  border-radius: 1rem;
-  width: 6rem;
-  font-size: smaller;
+h1 {
+	background: var(--color-primary-gradient);
+	background-clip: text;
+	-webkit-background: var(--color-primary-gradient-webkit);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;	
 }
 
-#abstract {
-  margin-top: -1rem;
+h1.font-title-2 {
+	font-size:2.5rem
+}
+
+.session-similarity {
+    color: var(--color-agenda-speaker);
+    margin-bottom: 4px;
+	margin-top: -1.75rem;
+}
+
+.font-stronger {
+    font-weight: 700;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }

@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Custom
 .env
+
+# For now...
+/database/SessionRecommender

@@ -51,22 +51,22 @@ export default function SessionsList() {
             <div id="sessions" className={navigation.state === "loading" ? "loading" : ""}>
                 {!errorInfo ? "" : <p id="error"><i>{"Error" + errorInfo.errorMessage}</i></p>}
                 {sessions.length ? (
-                    <ul>
+                    <section className="agenda-group">
                         {sessions.map((session) => (
-                            <li key={session.id}>
-                                <h2><a href={"https://airlift23.msftevents.io/sessions/details/" + session.topic_id} target="_blank">{session.title}</a></h2>
-                                <h4>Score: {(session.cosine_similarity * 100).toFixed(2)}%</h4>
-                                <div id="abstract">
+                            <div>
+                                <p className="font-title-2"><a href="https://www.dotnetconf.net/agenda">{session.title}</a></p>
+                                <p className="session-similarity font-stronger">Score: {(session.cosine_similarity * 100).toFixed(2)}%</p>
+                                <p className="font-subtitle-2 abstract">
                                     {session.abstract}
-                                </div>
-                            </li>
+                                </p>
+                            </div>
                         ))}
-                    </ul>
+                    </section>
                 ) : (
                     <p>
-                        <i>
-                            { isSearch ? "No session found" : "Use OpenAI to search for a session that will be interesting for you" }
-                        </i>
+                        <i><center>
+                            { isSearch ? "No session found" : "" }
+                        </center></i>
                     </p>
                 )}
             </div>

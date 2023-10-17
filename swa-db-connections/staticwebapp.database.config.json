@@ -10,7 +10,8 @@
   "runtime": {
     "rest": {
       "enabled": true,
-      "path": "/rest"
+      "path": "/rest",
+      "request-body-strict": true
     },
     "graphql": {
       "enabled": true,
@@ -19,7 +20,9 @@
     },
     "host": {
       "cors": {
-        "origins": [ "*" ],
+        "origins": [
+          "*"
+        ],
         "allow-credentials": false
       },
       "authentication": {
@@ -31,7 +34,7 @@
   "entities": {
     "FindRelatedSessions": {
       "source": {
-        "object": "dbo.stp_FindRelatedSessions",
+        "object": "netconf2023.find_sessions",
         "type": "stored-procedure",
         "parameters": {
           "text": "",
@@ -39,58 +42,89 @@
           "min_similarity": 0.65
         }
       },
-      "rest": {
-        "methods": [ "post" ]
-      },
       "graphql": {
+        "enabled": false,
         "operation": "query"
       },
+      "rest": {
+        "enabled": true,
+        "path": "/find",
+        "methods": [
+          "post"
+        ]
+      },
       "permissions": [
+        {
+          "role": "anonymous",
+          "actions": [
+            {
+              "action": "execute"
+            }
+          ]
+        }
+      ]
+    },
+    "GetSessionsCount": {
+      "source": {
+        "object": "netconf2023.get_sessions_count",
+        "type": "stored-procedure"
+      },
+      "graphql": {
+        "enabled": false,
+        "operation": "query"
+      },
+      "rest": {
+        "enabled": true,
+        "path": "/sessions-count",
+        "methods": [
+          "get"
+        ]
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": [
+            {
+              "action": "execute"
+            }
+          ]
+        }
+      ]
+    },
+    "Session": {
+      "source": {
+        "object": "netconf2023.sessions",
+        "type": "table"
+      },
+      "graphql": {
+        "enabled": true,
+        "type": {
+          "singular": "Session",
+          "plural": "Sessions"
+        }
+      },
+      "rest": {
+        "enabled": true,
+        "path": "/sessions"
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": [
+            {
+              "action": "read"
+            }
+          ]
+        },
         {
           "role": "authenticated",
-          "actions": [ "execute" ]
+          "actions": [
+            {
+              "action": "*"
+            }
+          ]
         }
-      ]
-    },
-    "SearchVideoRecordings": {
-      "source": {
-        "object": "dbo.stp_search_video_recordings",
-        "type": "stored-procedure",
-        "parameters": {
-          "text": "",
-          "top": 10,
-          "min_similarity": 0.65
-        }
-      },
-      "rest": {
-        "methods": [ "post" ]
-      },
-      "graphql": {
-        "operation": "query"
-      },
-      "permissions": [
-        {
-          "role": "anonymous",
-          "actions": [ "execute" ]
-        }
-      ]
-    },
-    "GetSessionsCountAggregate": {
-      "source": {
-        "object": "dbo.stp_GetSessionsCountAggregate",
-        "type": "stored-procedure"        
-      },
-      "rest": {
-        "methods": [ "get" ]
-      },
-      "graphql": {
-        "operation": "query"
-      },
-      "permissions": [
-        {
-          "role": "anonymous",
-          "actions": [ "execute" ]
-        }
+
       ]
     }
   }

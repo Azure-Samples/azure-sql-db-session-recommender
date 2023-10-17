@@ -10,7 +10,7 @@ export async function getSessions(content) {
     })
   };
 
-  const response = await fetch("/data-api/rest/FindRelatedSessions", settings);
+  const response = await fetch("/data-api/rest/find", settings);
   if (!response.ok) {
     return { 
       sessions: '[]', 
@@ -41,9 +41,9 @@ export async function getSessions(content) {
 }
 
 export async function getSessionsCount() {
-  const response = await fetch("/data-api/rest/GetSessionsCountAggregate");
+  const response = await fetch("/data-api/rest/sessions-count");
   if (!response.ok) return 'n/a';
   const data = await response.json();
-  const totalCount = (data) ? data.value[0].TotalSessionsCount : "n/a";
+  const totalCount = (data) ? data.value[0].total_sessions : "n/a";
   return totalCount;
 }
