@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "AzureSQL.ConnectionString": "Server=.database.windows.net;Initial Catalog=;Persist Security Info=False;User ID=session_recommender_app;Password=unEno!h5!&*KP420xds&@P901afb$^M;MultipleActiveResultSets=False;Encrypt=True;Connection Timeout=30;",
+        "AzureOpenAI.Endpoint": "https://.openai.azure.com/",
+        "AzureOpenAI.Key": ""
+    }
+}
