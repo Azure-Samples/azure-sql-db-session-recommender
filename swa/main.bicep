@@ -16,7 +16,7 @@ resource session_recommender_swa 'Microsoft.Web/staticSites@2022-09-01' = {
     buildProperties: {
       appLocation: '/swa/client'
       apiLocation: ''
-      appArtifactLocation: '/swa/dist'
+      appArtifactLocation: '/dist'
     }
   }
   sku: {
