@@ -34,7 +34,7 @@
   "entities": {
     "FindRelatedSessions": {
       "source": {
-        "object": "netconf2023.find_sessions",
+        "object": "web.find_sessions",
         "type": "stored-procedure",
         "parameters": {
           "text": "",
