@@ -12,11 +12,30 @@ A session recommender built using
 
 ## Getting Started
 
-Create a new repository using this repository as a template. Clone the respository locally and then a new `.env` file using the `.env.example` file as a template.
+### Create the Azure OpenAI service
 
 Create an [embedding model](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models) using the [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal) and name it `embeddings`. Make sure to use the `text-embedding-ada-002` mode. Once the resource is created, and add the API key and the API url into the `.env` file.
 
+### Deploy the solution
+
+Fork this repository and then clone the forked respository locally.
+
+#### Deploy the database
+
 Create an new [Azure SQL database](https://learn.microsoft.com/en-us/azure/azure-sql/database/single-database-create-quickstart?view=azuresql&tabs=azure-portal), then run the `./database/setup-database.sql` script to set up the database.
+
+It is recommened to use Azure Data Studio to run the script. Make sure that the `SQLCMD` mode is enabled. To enable `SQLCMD` mode, click on the `SQLCMD` button in the toolbar.
+
+Before running the script set the values for the SQLCMD variable on top of the script:
+
+```
+:setvar OpenAIUrl https://<your-openai-service>.openai.azure.com
+:setvar OpenAIKey <your-key>
+```
+
+The run the script to create the database.
+
+#### Deploy Static Web App and Azure Function
 
 Create a new azuredeploy.parameter.json file using the azuredeploy.parameter.json.example file as a template. Then run the following command to deploy the database to Azure.
 
