@@ -1,6 +1,6 @@
 # Session Recommender Sample
 
-![Architecture Diagram](./_docs/session-recommeder-architecture.png)
+![Architecture Diagram](./_docs/session-recommender-architecture.png)
 
 A session recommender built using
 
@@ -93,3 +93,5 @@ select * from web.session_abstract_embeddings
 ```
 
 You can now open the URL associated with the created Static Web App to see the session recommender in action. You can get the URL from the Static Web App overview page in the Azure portal.
+
+![Website running](./_docs/session-recommender.png)
