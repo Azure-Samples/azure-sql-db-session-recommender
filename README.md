@@ -10,6 +10,11 @@ A session recommender built using
 - Azure SQL Database
 - Data API builder
 
+For more details on the solution check also the following articles:
+
+- [How I built a session recommender in 1 hour using Open AI](https://dev.to/azure/how-i-built-a-session-recommender-in-1-hour-using-open-ai-5419)
+- [Vector Similarity Search with Azure SQL database and OpenAI](https://devblogs.microsoft.com/azure-sql/vector-similarity-search-with-azure-sql-database-and-openai/)
+
 ## Getting Started
 
 Make sure you have [AZ CLI installed](https://learn.microsoft.com/en-us/cli/azure/). It is also recommeneded to use VS Code with the Azure Functions extension installed.
