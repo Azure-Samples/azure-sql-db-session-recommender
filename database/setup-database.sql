@@ -35,20 +35,20 @@ go
 /*
     Create schema
 */
-create schema [netconf2023] authorization dbo;
+create schema [web] authorization dbo;
 go
 
 /*
     Create sequence
 */
-create sequence netconf2023.global_id as int start with 1 increment by 1;
+create sequence web.global_id as int start with 1 increment by 1;
 go
 
 /*
     Create tables
 */
-CREATE TABLE [netconf2023].[sessions] (
-    [id]           INT            DEFAULT (NEXT VALUE FOR [netconf2023].[global_id]) NOT NULL,
+CREATE TABLE [web].[sessions] (
+    [id]           INT            DEFAULT (NEXT VALUE FOR [web].[global_id]) NOT NULL,
     [title]        NVARCHAR (200) NOT NULL,
     [abstract]     NVARCHAR (MAX) NOT NULL,
     [last_updated] DATETIME2 (7)  NULL,
@@ -57,21 +57,21 @@ CREATE TABLE [netconf2023].[sessions] (
 );
 go
 
-ALTER TABLE [netconf2023].[sessions] ENABLE CHANGE_TRACKING WITH (TRACK_COLUMNS_UPDATED = OFF);
+ALTER TABLE [web].[sessions] ENABLE CHANGE_TRACKING WITH (TRACK_COLUMNS_UPDATED = OFF);
 go
 
-CREATE TABLE [netconf2023].[session_abstract_embeddings] (
+CREATE TABLE [web].[session_abstract_embeddings] (
     [session_id]      INT              NOT NULL,
     [vector_value_id] INT              NOT NULL,
     [vector_value]    DECIMAL (19, 16) NOT NULL,
-    FOREIGN KEY ([session_id]) REFERENCES [netconf2023].[sessions] ([id])
+    FOREIGN KEY ([session_id]) REFERENCES [web].[sessions] ([id])
 );
 go
 
-CREATE CLUSTERED COLUMNSTORE INDEX IXCC ON [netconf2023].session_abstract_embeddings;
+CREATE CLUSTERED COLUMNSTORE INDEX IXCC ON [web].session_abstract_embeddings;
 go
 
-CREATE TABLE [netconf2023].[searched_text] (
+CREATE TABLE [web].[searched_text] (
     [id]               INT            IDENTITY (1, 1) NOT NULL,
     [searched_text]    NVARCHAR (MAX) NOT NULL,
     [search_datetime]  DATETIME2 (7)  DEFAULT (sysdatetime()) NOT NULL,
@@ -84,7 +84,7 @@ go
 /*
     Create procedures
 */
-create or alter procedure [netconf2023].[find_sessions]
+create or alter procedure [web].[find_sessions]
 @text nvarchar(max),
 @top int = 10,
 @min_similarity decimal(19,16) = 0.65
@@ -92,7 +92,7 @@ as
 if (@text is null) return;
 
 declare @sid as int;
-insert into netconf2023.searched_text (searched_text) values (@text);
+insert into web.searched_text (searched_text) values (@text);
 set @sid = scope_identity()
 
 declare @startTime as datetime2(7) = sysdatetime()
@@ -127,7 +127,7 @@ if (@retval != 0) begin
 end;
 
 declare @endTime1 as datetime2(7) = sysdatetime();
-update [netconf2023].[searched_text] set ms_rest_call = datediff(ms, @startTime, @endTime1) where id = @sid;
+update [web].[searched_text] set ms_rest_call = datediff(ms, @startTime, @endTime1) where id = @sid;
 
 with cteVector as
 (
@@ -146,7 +146,7 @@ cteSimilar as
     from 
         cteVector v1
     inner join 
-        netconf2023.session_abstract_embeddings v2 on v1.vector_value_id = v2.vector_value_id
+        web.session_abstract_embeddings v2 on v1.vector_value_id = v2.vector_value_id
     group by
         v2.session_id
     order by
@@ -160,22 +160,22 @@ select
 from 
     cteSimilar r
 inner join 
-    netconf2023.sessions a on r.session_id = a.id
+    web.sessions a on r.session_id = a.id
 where   
     r.cosine_similarity > @min_similarity
 order by    
     r.cosine_similarity desc
 
 declare @endTime2 as datetime2(7) = sysdatetime()
-update [netconf2023].[searched_text] set ms_vector_search = datediff(ms, @endTime1, @endTime2) where id = @sid
+update [web].[searched_text] set ms_vector_search = datediff(ms, @endTime1, @endTime2) where id = @sid
 go
 
-create or alter procedure netconf2023.get_sessions_count
+create or alter procedure web.get_sessions_count
 as
-select count(*) as total_sessions from netconf2023.sessions;
+select count(*) as total_sessions from web.sessions;
 go
 
-create or alter procedure [netconf2023].[upsert_session_abstract_embeddings]
+create or alter procedure [web].[upsert_session_abstract_embeddings]
 @session_id int,
 @embeddings nvarchar(max)
 as
@@ -185,12 +185,12 @@ set transaction isolation level serializable
 
 begin transaction
 
-    update netconf2023.sessions set last_updated = sysdatetime() where id = @session_id
+    update web.sessions set last_updated = sysdatetime() where id = @session_id
 
-    delete from netconf2023.session_abstract_embeddings 
+    delete from web.session_abstract_embeddings 
     where session_id = @session_id
 
-    insert into netconf2023.session_abstract_embeddings
+    insert into web.session_abstract_embeddings
     select @session_id, cast([key] as int), cast([value] as float) 
     from openjson(@embeddings)
 
