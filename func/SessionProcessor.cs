@@ -54,7 +54,7 @@ namespace SessionRecommender.SessionProcessor
 
         [FunctionName("SessionProcessor")]
         public static async Task Run(
-            [SqlTrigger("[netconf2023].[sessions]", "AzureSQL.ConnectionString")]
+            [SqlTrigger("[web].[sessions]", "AzureSQL.ConnectionString")]
             IReadOnlyList<SqlChange<Session>> changes,
             ILogger logger)
         {
@@ -92,7 +92,7 @@ namespace SessionRecommender.SessionProcessor
 
                         using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AzureSQL.ConnectionString"));
                         await conn.ExecuteAsync(
-                            "netconf2023.upsert_session_abstract_embeddings",
+                            "web.upsert_session_abstract_embeddings",
                             commandType: CommandType.StoredProcedure,
                             param: new
                             {
