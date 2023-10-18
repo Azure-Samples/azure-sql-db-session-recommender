@@ -4,11 +4,11 @@
 
 A session recommender built using
 
-- Azure Static Web Apps
-- Azure OpenAI
-- Azure Functions
-- Azure SQL Database
-- Data API builder
+- [Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/overview)
+- [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/)
+- [Azure Functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview?pivots=programming-language-csharp)
+- [Azure SQL Database](https://www.sqlservercentral.com/articles/the-sql-developer-experience-beyond-rdbms)
+- [Data API builder](https://aka.ms/dab)
 
 For more details on the solution check also the following articles:
 
