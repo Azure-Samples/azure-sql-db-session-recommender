@@ -202,8 +202,7 @@ Create user
 */
 if not exists(select * from sys.database_principals where name = 'session_recommender_app')
 begin
-    create user session_recommender_app with password = 'unEno!h5!&*KP420xds&@P901afb$^M'
-    grant select on schema::netconf2023 to session_recommender_app
-    grant execute on schema::netconf2023 to session_recommender_app
+    create user session_recommender_app with password = 'unEno!h5!&*KP420xds&@P901afb$^M';
+    alter role db_owner add member session_recommender_app;
 end
 go
