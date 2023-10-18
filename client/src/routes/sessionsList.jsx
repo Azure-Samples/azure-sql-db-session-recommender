@@ -55,7 +55,7 @@ export default function SessionsList() {
                         {sessions.map((session) => (
                             <div>
                                 <p className="font-title-2"><a href="https://www.dotnetconf.net/agenda">{session.title}</a></p>
-                                <p className="session-similarity font-stronger">Score: {(session.cosine_similarity * 100).toFixed(2)}%</p>
+                                <p className="session-similarity font-stronger">Similarity: {session.cosine_similarity.toFixed(2)}%</p>
                                 <p className="font-subtitle-2 abstract">
                                     {session.abstract}
                                 </p>
