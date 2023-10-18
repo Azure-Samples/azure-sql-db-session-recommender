@@ -66,7 +66,7 @@
     },
     "GetSessionsCount": {
       "source": {
-        "object": "netconf2023.get_sessions_count",
+        "object": "web.get_sessions_count",
         "type": "stored-procedure"
       },
       "graphql": {
@@ -93,7 +93,7 @@
     },
     "Session": {
       "source": {
-        "object": "netconf2023.sessions",
+        "object": "web.sessions",
         "type": "table"
       },
       "graphql": {
