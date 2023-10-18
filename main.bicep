@@ -36,7 +36,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2022-09-01' = {
     branch: 'main'
     repositoryToken: repositoryToken
     buildProperties: {
-      appLocation: '/swa/client'
+      appLocation: '/client'
       apiLocation: ''
       appArtifactLocation: '/dist'
     }

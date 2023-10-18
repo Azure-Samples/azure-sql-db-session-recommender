@@ -18,13 +18,15 @@ Create an [embedding model](https://learn.microsoft.com/en-us/azure/ai-services/
 
 Create an new [Azure SQL database](https://learn.microsoft.com/en-us/azure/azure-sql/database/single-database-create-quickstart?view=azuresql&tabs=azure-portal), then run the `./database/setup-database.sql` script to set up the database.
 
-Update the connection string in the `.env` to add the server address and the database name:
+Create a new azuredeploy.parameter.json file using the azuredeploy.parameter.json.example file as a template. Then run the following command to deploy the database to Azure.
 
-```
-MSSQL="Server=myserver.database.windows.net;Initial Catalog=SessionRecommender;Persist Security Info=False;..."
+```bash
+az group create -g <your-resource-group-name> -l <location>
+az deployment group create --resource-group <your-resource-group-name> --template-file main.bicep --parameters azuredeploy.parameters.json
 ```
 
 [Deploy the Static Web App](https://learn.microsoft.com/en-us/azure/static-web-apps/static-web-apps-cli-deploy) and then link the Static Web App to the created database using the [Database Connections](https://learn.microsoft.com/en-us/azure/static-web-apps/database-overview) feature.
 
-Create an Azure Function and then deploy the function available in the `func` folder
+Create an Azure Function and then deploy the function available in the `func` folder. If you are using VS Code, you can use the Azure Function extension to deploy the function. Right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in the previous step created.
 
+Azure function must be deployed as a stand-alone resource and cannot be deployed as part of the Static Web App, as a managed function within the Static Web App only supports HTTP triggers.
