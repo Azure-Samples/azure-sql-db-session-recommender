@@ -36,7 +36,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2022-09-01' = {
     branch: 'main'
     repositoryToken: repositoryToken
     buildProperties: {
-      appLocation: '/swa/client'
+      appLocation: '/client'
       apiLocation: ''
       appArtifactLocation: '/dist'
     }
@@ -78,8 +78,9 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    serverFarmId: hostingPlan.id
-    siteConfig: {
+    serverFarmId: hostingPlan.id    
+    siteConfig: {      
+      netFrameworkVersion: 'v6.0'
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
@@ -96,10 +97,6 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
           value: '~4'
-        }
-        {
-          name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '~14'
         }
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
