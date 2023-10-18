@@ -6,7 +6,7 @@
             "value": "Central US"
         },   
         "repositoryUrl": {
-            "value": "https://github.com/<your-account>/session-recommender"
+            "value": "https://github.com/<your-account>/azure-sql-db-session-recommender"
         },
         "repositoryToken": {
             "value": "<your-github-token>" 
@@ -19,6 +19,9 @@
         },
         "sqlConnectionString": {
             "value": "Server=<your-server>.database.windows.net;Initial Catalog=<your-database>;Persist Security Info=False;User ID=session_recommender_app;Password=unEno!h5!&*KP420xds&@P901afb$^M;MultipleActiveResultSets=False;Encrypt=True;Connection Timeout=30;" 
+        },
+        "resourceTags": {
+            "value": {}
         }
     }
 }
