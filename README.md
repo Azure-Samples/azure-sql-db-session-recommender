@@ -92,4 +92,4 @@ immediately the deployed Azure Function will get executed in response to the `IN
 select * from web.session_abstract_embeddings
 ```
 
-You can now open the URL associated with the created Static Web App to see the session recommender in action.
+You can now open the URL associated with the created Static Web App to see the session recommender in action. You can get the URL from the Static Web App overview page in the Azure portal.
