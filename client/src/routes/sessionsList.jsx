@@ -54,7 +54,7 @@ export default function SessionsList() {
                     <section className="agenda-group">
                         {sessions.map((session) => (
                             <div>
-                                <p className="font-title-2"><a href="https://www.dotnetconf.net/agenda">{session.title}</a></p>
+                                <p className="font-title-2"><a href={"#" + session.id}>{session.title}</a></p>
                                 <p className="session-similarity font-stronger">Similarity: {session.cosine_similarity.toFixed(6)}</p>
                                 <p className="font-subtitle-2 abstract">
                                     {session.abstract}
