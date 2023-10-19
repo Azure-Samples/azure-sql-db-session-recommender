@@ -23,9 +23,11 @@ namespace api
             
             string userDetails = data?.userDetails ?? string.Empty;
 
-            var roles = new List<string> { "authenticated", "anonymous" };
+            var roles = new List<string>();;
 
-            if (userDetails.EndsWith("@microsoft.com")) roles.Add("microsoft");        
+            if (userDetails.EndsWith("@microsoft.com")) 
+                roles.Add("microsoft");        
+                
             log.LogInformation($"User {userDetails} has roles {string.Join(",", roles)}");                
 
             return new OkObjectResult(new { roles });
