@@ -35,7 +35,7 @@ Create a new [Azure OpenAI service](https://learn.microsoft.com/en-us/azure/ai-s
 az cognitiveservices account create --name <your-openai-name> --resource-group <your-resource-group-name> --kind OpenAI --sku s0
 ```
 
-Create an [embedding model](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models) using the [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal) and name it `embeddings`. Make sure to use the `text-embedding-ada-002` mode. Once the resource is created, and add the API key and the API url into the `.env` file.
+Create an [embedding model](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models) using the [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal) and name it `embeddings`. Make sure to use the `text-embedding-ada-002` mode. Once the resource is created, create a `azuredeploy.parameters.json` file using the provided sample file and add the API key and the API url. If you want to also test everything locally, also create a `.env` file from the provided sample and add the API key and url also there. 
 
 ### Deploy the solution
 
@@ -100,3 +100,7 @@ select * from web.session_abstract_embeddings
 You can now open the URL associated with the created Static Web App to see the session recommender in action. You can get the URL from the Static Web App overview page in the Azure portal.
 
 ![Website running](./_docs/session-recommender.png)
+
+### Run the solution locally
+
+The whole solution can be executed locally, using [Static Web App CLI](https://github.com/Azure/static-web-apps-cli) and [Azure Function CLI](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp).
