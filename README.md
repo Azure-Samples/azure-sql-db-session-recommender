@@ -60,15 +60,21 @@ Then run the script to create the database objects.
 
 #### Deploy Static Web App and Azure Function
 
-Create a new `azuredeploy.parameter.json` file using the `azuredeploy.parameter.json.sample` file as a template. 
+Replace the placeholders values in the `azuredeploy.parameters.json` file with the correct values for your environment. Follow the documentation here: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) to get the GitHub token needed to deploy the Static Web App. Make sure the token created is a "classic" token that has access to the following scopes: **repo, workflow, write:packages**
 
-Replace the placeholders values in the newly created file with the correct values for your environment. Follow the documentation here: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) to get the GitHub token needed to deploy the Static Web App. Make sure the token created is a "classic" token that has access to the following scopes: **repo, workflow, write:packages**
-
-Then run the following command to deploy the database to Azure. 
+Then run the following command to create the resources in Azure. 
 
 ```bash
 az deployment group create --resource-group <your-resource-group-name> --template-file main.bicep --parameters azuredeploy.parameters.json
 ```
+
+The deployment process will create 
+- Static Web App
+- Function
+- Storage Account
+- Application Insight
+
+The deployment process will also automatically deploy the code of the referenced repository intpo the created Static Web App. 
 
 #### Configure the Static Web App 
 
@@ -76,9 +82,9 @@ Now that the Static Web App has been deployed, it needs to be linked the Static 
 
 #### Deploy the Azure Function
 
-To upload the Azure Function code to Azure it is recommeded to use Visual Studio Code, and the Azure Function extension: right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in 'Deploy Static Web App and Azure Function' step.
+To upload the Azure Function code to Azure it is recommeded to use Visual Studio Code, and the [Azure Function extension](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp): right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in 'Deploy Static Web App and Azure Function' step.
 
-> Note: Azure function must be deployed as a stand-alone resource and cannot be deployed managed function within the Static Web App. Static Web Apps managed functions only support HTTP triggers.
+> Note: Azure function must be deployed as a stand-alone resource and cannot be deployed as a managed function within the Static Web App. Static Web Apps managed functions only support HTTP triggers.
 
 ### Test the solution
 
