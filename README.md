@@ -56,7 +56,7 @@ Before running the script set the values for the SQLCMD variable on top of the s
 
 using the value from the OpenAI service created in the previous step.
 
-Then run the script to create the database.
+Then run the script to create the database objects.
 
 #### Deploy Static Web App and Azure Function
 
