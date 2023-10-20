@@ -23,7 +23,7 @@ begin try
     exec @retval = sp_invoke_external_rest_endpoint
         @url = '$(OpenAIUrl)/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
-        @credential = [https://dm-open-ai.openai.azure.com],
+        @credential = [$(OpenAIUrl)],
         @payload = @payload,
         @response = @response output;
 end try
