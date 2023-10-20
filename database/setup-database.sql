@@ -201,8 +201,6 @@ set transaction isolation level serializable
 
 begin transaction
 
-    update web.sessions set last_updated = sysdatetime() where id = @session_id
-
     delete from web.session_abstract_embeddings 
     where session_id = @session_id
 
