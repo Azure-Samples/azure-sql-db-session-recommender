@@ -84,6 +84,26 @@ Now that the Static Web App has been deployed, it needs to be linked the Static 
 
 To upload the Azure Function code to Azure it is recommeded to use Visual Studio Code, and the [Azure Function extension](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp): right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in 'Deploy Static Web App and Azure Function' step.
 
+Another option is to use AZ CLI. First build the function:
+
+```bash
+cd func
+dotnet publish
+```
+
+and then compress the content of the `publish` folder (sample for PowerShell):
+
+```powershell
+Compress-Archive .\bin\Debug\net6.0\publish\* SessionProcessor.zip
+```
+
+and the depoy it via AZ CLI:
+
+```bash
+az functionapp deploy --clean true --src-path .\SessionProcessor.zip -g <resource-group> -n <function-app-name>
+```
+
+
 > Note: Azure function must be deployed as a stand-alone resource and cannot be deployed as a managed function within the Static Web App. Static Web Apps managed functions only support HTTP triggers.
 
 ### Test the solution

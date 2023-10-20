@@ -55,10 +55,10 @@ CREATE TABLE [web].[sessions] (
     PRIMARY KEY CLUSTERED ([id] ASC),
     UNIQUE NONCLUSTERED ([title] ASC)
 );
-go
+GO
 
 ALTER TABLE [web].[sessions] ENABLE CHANGE_TRACKING WITH (TRACK_COLUMNS_UPDATED = OFF);
-go
+GO
 
 CREATE TABLE [web].[session_abstract_embeddings] (
     [session_id]      INT              NOT NULL,
@@ -66,10 +66,10 @@ CREATE TABLE [web].[session_abstract_embeddings] (
     [vector_value]    DECIMAL (19, 16) NOT NULL,
     FOREIGN KEY ([session_id]) REFERENCES [web].[sessions] ([id])
 );
-go
+GO
 
 CREATE CLUSTERED COLUMNSTORE INDEX IXCC ON [web].session_abstract_embeddings;
-go
+GO
 
 CREATE TABLE [web].[searched_text] (
     [id]               INT            IDENTITY (1, 1) NOT NULL,
@@ -80,6 +80,22 @@ CREATE TABLE [web].[searched_text] (
     PRIMARY KEY CLUSTERED ([id] ASC)
 );
 go
+
+CREATE TABLE web.users (
+    [id] INT NOT NULL DEFAULT (NEXT VALUE FOR [web].[global_id]) PRIMARY KEY,
+    [identity_provider] NVARCHAR(100) NOT NULL,
+    [indetity_provider_user_id] NVARCHAR(100) NOT NULL,  
+    [identity_provider_user_details] NVARCHAR(1000) NOT NULL    
+)
+GO
+
+CREATE TABLE web.user_session_favorites
+(
+    [user_id] INT NOT NULL,
+    [session_id] INT NOT NULL,
+    PRIMARY KEY ([user_id], [session_id])
+)
+GO
 
 /*
     Create procedures
@@ -184,8 +200,6 @@ set xact_abort on
 set transaction isolation level serializable
 
 begin transaction
-
-    update web.sessions set last_updated = sysdatetime() where id = @session_id
 
     delete from web.session_abstract_embeddings 
     where session_id = @session_id

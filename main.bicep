@@ -37,7 +37,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2022-09-01' = {
     repositoryToken: repositoryToken
     buildProperties: {
       appLocation: '/client'
-      apiLocation: ''
+      apiLocation: '/api'
       appArtifactLocation: '/dist'
     }
   }
@@ -105,7 +105,7 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet'
-        }
+        }        
         {
           name: 'AzureSQL.ConnectionString'
           value: sqlConnectionString
