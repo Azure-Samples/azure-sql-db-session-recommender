@@ -402,4 +402,4 @@ FodyWeavers.xsd
 azuredeploy.parameters.json
 
 # For now...
-//database/SessionRecommender
+/database/SessionRecommender
