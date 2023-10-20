@@ -400,6 +400,7 @@ FodyWeavers.xsd
 # Custom
 .env
 azuredeploy.parameters.json
+*.zip
 
 # For now...
 /database/SessionRecommender
