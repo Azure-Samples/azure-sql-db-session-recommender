@@ -85,20 +85,20 @@ namespace SessionRecommender.SessionProcessor
 
                         var jd = await response.Content.ReadAsAsync<JObject>();
                         var e = jd.SelectToken("data[0].embedding");
-                        if (e == null) continue;
-
-                        //var u = jd.SelectToken("usage");                
-                        //Console.WriteLine($"{change.Item.Id}: {u}");
-
-                        using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AzureSQL.ConnectionString"));
-                        await conn.ExecuteAsync(
-                            "web.upsert_session_abstract_embeddings",
-                            commandType: CommandType.StoredProcedure,
-                            param: new
-                            {
-                                @session_id = change.Item.Id,
-                                @embeddings = e.ToString()
-                            });
+                        if (e != null)
+                        {
+                            using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AzureSQL.ConnectionString"));
+                            await conn.ExecuteAsync(
+                                "web.upsert_session_abstract_embeddings",
+                                commandType: CommandType.StoredProcedure,
+                                param: new
+                                {
+                                    @session_id = change.Item.Id,
+                                    @embeddings = e.ToString()
+                                });                                                    
+                        }
+                        
+                        attempts = 3;
                     }
                 }
             }
