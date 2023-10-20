@@ -105,7 +105,7 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet'
-        }
+        }        
         {
           name: 'AzureSQL.ConnectionString'
           value: sqlConnectionString
