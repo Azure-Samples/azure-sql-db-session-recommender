@@ -15,13 +15,13 @@ export default function Root() {
     <>
       <div id="header">
         <h1 className="font-title-2">Cool Conference Session Finder</h1>
-        <div id="user-info">
+        <p className="font-subtitle-2 user-info">
           { userInfo ?
             <span>Welcome {userInfo.userDetails}! [<a href="/logout">Logout</a>] </span>
             :
             <a href="/login">Login with Microsoft Entra ID</a>
           }
-        </div>
+        </p>
         <p className="font-subtitle-2">
           Use OpenAI to search for interesting sessions. Write the topic you're interested in, and (up to) the top ten most interesting and related session will be returned.         
           The search is done using <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#embeddings-models">text embeddings</a> and then using <a href="https://en.wikipedia.org/wiki/Cosine_similarity" target="_blank">cosine similarity</a> to find the most similar sessions.
