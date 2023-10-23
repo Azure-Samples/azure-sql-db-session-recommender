@@ -1,3 +1,22 @@
+---
+page_type: sample
+languages:
+- csharp
+- sql
+- tsql
+products:
+- azure-functions
+- azure-sql-database
+- static-web-apps
+- sql-server
+- azure-sql-managed-instance
+- azure-sqlserver-vm
+- dotnet
+- azure-openai
+name: Session Recommender using Azure SQL DB, Open AI and Vector Search
+description: Build a session recommender using Jamstack and Event-Driven architecture, using Azure SQL DB to store and search vectors embeddings generated using OpenAI
+---
+
 # Session Recommender Sample
 
 ![Architecture Diagram](./_docs/session-recommender-architecture.png)
