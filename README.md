@@ -99,6 +99,25 @@ The deployment process will also automatically deploy the code of the referenced
 
 Now that the Static Web App has been deployed, it needs to be linked the Static Web App to the created database using the [Database Connections](https://learn.microsoft.com/en-us/azure/static-web-apps/database-overview) feature. Follow the instructions in the [Configure database connectivity](https://learn.microsoft.com/en-us/azure/static-web-apps/database-configuration#configure-database-connectivity) to configure the database connection.
 
+#### (Optional) Use a custom authentication provider with Static Web Apps
+
+The folder `api` contains a sample function to customize the authentication process as described in the [Custom authentication in Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-custom?tabs=aad%2Cinvitations#configure-a-custom-identity-provider) article. The function will add any user with an `@microsoft.com` to the `microsoft` role. Data API builder can be configured to allow acceess to a certain API only to users with a certain role, for example:
+
+```json
+"permissions": [
+    {
+        "role": "microsoft",
+        "actions": [
+        {
+            "action": "execute"
+        }
+        ]
+    }
+]
+```
+
+This step is optional and is provided mainly as an example on how to use custom authentication with SWA and DAB. It is not used in the solution.
+
 #### Deploy the Azure Function
 
 To upload the Azure Function code to Azure it is recommeded to use Visual Studio Code, and the [Azure Function extension](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp): right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in 'Deploy Static Web App and Azure Function' step.
