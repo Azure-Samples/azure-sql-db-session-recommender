@@ -591,9 +591,23 @@ h1.font-title-2 {
 }
 
 a {
-	text-decoration: none;
+	color: var(--color-link-foreground);
+	text-decoration: underline;
+	border: solid var(--dotnet-btn-border-width) transparent;
+	border-radius: var(--dotnet-btn-corner-radius);
 }
 
 a:hover {
+	color: var(--color-link-foreground-hover);
 	text-decoration: underline;
+}
+
+a:active {
+	color: var(--color-link-foreground-active);
+	text-decoration: underline;
+}
+
+a:focus-visible {
+	outline: solid var(--dotnet-btn-focus-outline-width) var(--color-dotnet-btn-focus-outline);
+	outline-offset: var(--dotnet-btn-focus-outline-offset);
 }
