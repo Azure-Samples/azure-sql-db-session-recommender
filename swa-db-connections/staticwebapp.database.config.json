@@ -39,7 +39,7 @@
         "parameters": {
           "text": "",
           "top": 10,
-          "min_similarity": 0.65
+          "min_similarity": 0.745
         }
       },
       "graphql": {
