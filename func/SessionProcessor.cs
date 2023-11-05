@@ -58,7 +58,7 @@ namespace SessionRecommender.SessionProcessor
             IReadOnlyList<SqlChange<Session>> changes,
             ILogger logger)
         {
-            logger.LogInformation("Detected: " + changes.Count + " changes.");
+            logger.LogInformation("Detected: " + changes.Count + " change(s).");
 
             foreach (var change in changes)
             {
@@ -66,11 +66,12 @@ namespace SessionRecommender.SessionProcessor
                 logger.LogInformation($"[{change.Item.Id}] Processing change for operation: " + change.Operation.ToString());
 
                 var attempts = 0;
+                var embeddingsReceived = false;
                 while (attempts < 3)
                 {
                     attempts++;
 
-                    logger.LogInformation($"[{change.Item.Id}] Attempt {attempts}/3 to get embeddings.");
+                    logger.LogInformation($"[{change.Item.Id}] Attempt {attempts} of 3 to get embeddings.");
 
                     var response = await httpClient.PostAsJsonAsync(
                         "/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview",
@@ -82,31 +83,34 @@ namespace SessionRecommender.SessionProcessor
                         var waitFor = response.Headers.RetryAfter.Delta.Value.TotalSeconds;
                         logger.LogInformation($"[{change.Item.Id}] OpenAI had too many requests. Waiting {waitFor} seconds.");                        
                         await Task.Delay(TimeSpan.FromSeconds(waitFor));
+                        continue;
                     }
-                    else
-                    {
-                        response.EnsureSuccessStatusCode();
 
-                        var jd = await response.Content.ReadAsAsync<JObject>();
-                        var e = jd.SelectToken("data[0].embedding");
-                        if (e != null)
-                        {
-                            using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AzureSQL.ConnectionString"));
-                            await conn.ExecuteAsync(
-                                "web.upsert_session_abstract_embeddings",
-                                commandType: CommandType.StoredProcedure,
-                                param: new
-                                {
-                                    @session_id = change.Item.Id,
-                                    @embeddings = e.ToString()
-                                });                                                    
-                            logger.LogInformation($"[{change.Item.Id}] Done.");
-                        } else {
-                            logger.LogInformation($"[{change.Item.Id}] No embeddings received.");
-                        }
-                        
-                        attempts = 3;
+                    response.EnsureSuccessStatusCode();
+
+                    var jd = await response.Content.ReadAsAsync<JObject>();
+                    var e = jd.SelectToken("data[0].embedding");
+                    if (e != null)
+                    {
+                        using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AzureSQL.ConnectionString"));
+                        await conn.ExecuteAsync(
+                            "web.upsert_session_abstract_embeddings",
+                            commandType: CommandType.StoredProcedure,
+                            param: new
+                            {
+                                @session_id = change.Item.Id,
+                                @embeddings = e.ToString()
+                            });                           
+                        embeddingsReceived = true;                            
+                        logger.LogInformation($"[{change.Item.Id}] Done.");
+                    } else {
+                        logger.LogInformation($"[{change.Item.Id}] No embeddings received.");
                     }
+                    
+                    break;                 
+                }
+                if (!embeddingsReceived) {
+                    logger.LogInformation($"[{change.Item.Id}] Failed to get embeddings.");
                 }
             }
         }
