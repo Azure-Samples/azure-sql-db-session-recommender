@@ -101,7 +101,7 @@ Now that the Static Web App has been deployed, it needs to be linked the Static 
 
 #### (Optional) Use a custom authentication provider with Static Web Apps
 
-The folder `api` contains a sample function to customize the authentication process as described in the [Custom authentication in Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-custom?tabs=aad%2Cinvitations#configure-a-custom-identity-provider) article. The function will add any user with an `@microsoft.com` to the `microsoft` role. Data API builder can be configured to allow acceess to a certain API only to users with a certain role, for example:
+The folder `api` contains a sample function to customize the authentication process as described in the [Custom authentication in Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-custom?tabs=aad%2Cinvitations#configure-a-custom-identity-provider) article. The function will add any user with a `@microsoft.com` to the `microsoft` role. Data API builder can be configured to allow acceess to a certain API only to users with a certain role, for example:
 
 ```json
 "permissions": [
@@ -120,7 +120,15 @@ This step is optional and is provided mainly as an example on how to use custom 
 
 #### Deploy the Azure Function
 
-To upload the Azure Function code to Azure it is recommeded to use Visual Studio Code, and the [Azure Function extension](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp): right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in 'Deploy Static Web App and Azure Function' step.
+The function to use OpenAI to convert session title and abstract into embeddings is in the `func` folder. It uses the [Azure SQL trigger for Functions](https://learn.microsoft.com/azure/azure-functions/functions-bindings-azure-sql-trigger?tabs=isolated-process%2Cportal&pivots=programming-language-csharp) to monitor changes on the `session` table.
+
+Create a `local.settings.json` file from the provided `local.settings.json.sample` and add values for your enviroment for:
+
+- AzureSQL.ConnectionString
+- AzureOpenAI.Endpoint
+- AzureOpenAI.Key
+
+To upload the Azure Function code to Azure it is recommeded to use Visual Studio Code, and the [Azure Function extension](https://learn.microsoft.com/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp): right click on the `/func` folder, select "Deploy to Function App" and then select the function app that has was created in 'Deploy Static Web App and Azure Function' step.
 
 Another option is to use AZ CLI. First build the function:
 
@@ -141,6 +149,13 @@ and the depoy it via AZ CLI:
 az functionapp deploy --clean true --src-path .\SessionProcessor.zip -g <resource-group> -n <function-app-name>
 ```
 
+After the function has been deployed, use VS Code to sync the `local.settings.json` with the deployed Azure Functions or create the enviroment variables
+
+- AzureSQL.ConnectionString
+- AzureOpenAI.Endpoint
+- AzureOpenAI.Key
+
+in the deployed Azure Function manually.
 
 > Note: Azure function must be deployed as a stand-alone resource and cannot be deployed as a managed function within the Static Web App. Static Web Apps managed functions only support HTTP triggers.
 
