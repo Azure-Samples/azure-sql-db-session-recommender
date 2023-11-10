@@ -75,7 +75,7 @@ namespace SessionRecommender.SessionProcessor
 
                     var response = await httpClient.PostAsJsonAsync(
                         "/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview",
-                        new { input = change.Item.Abstract }
+                        new { input = change.Item.Title + ':' + change.Item.Abstract }
                     );
 
                     if (response.StatusCode == HttpStatusCode.TooManyRequests)
