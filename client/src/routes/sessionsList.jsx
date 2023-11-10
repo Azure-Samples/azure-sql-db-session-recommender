@@ -49,7 +49,7 @@ export default function SessionsList() {
                 </div>
             </div>
             <div id="sessions" className={navigation.state === "loading" ? "loading" : ""}>
-                {!errorInfo ? "" : <p id="error"><i>{"Error" + errorInfo.errorMessage}</i></p>}
+                {errorInfo ? <p id="error"><i>{"[Error] Status: " + errorInfo.errorCode + " Message: " + errorInfo.errorMessage}</i></p> : ""}
                 {sessions.length ? (
                     <section className="agenda-group">
                         {sessions.map((session) => (
