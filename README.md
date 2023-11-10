@@ -184,6 +184,15 @@ You can now open the URL associated with the created Static Web App to see the s
 
 The whole solution can be executed locally, using [Static Web App CLI](https://github.com/Azure/static-web-apps-cli) and [Azure Function CLI](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp).
 
+Install the required node packages needed by the fronted:
+
+```
+cd client
+npm install
+```
+
+once finished, go back to the sample root and then
+
 ```bash
 swa start --app-location ./client --data-api-location .\swa-db-connections\
 ```
