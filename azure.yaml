@@ -31,7 +31,3 @@ hooks:
         az functionapp deploy --clean true --src-path .\SessionProcessor.zip -g "$env:RESOURCE_GROUP" -n "$env:FUNCTIONAPP_NMAE"
        continueOnError: false
        interactive: false
-    
-       
- 
-   
