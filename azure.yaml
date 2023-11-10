@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: azure-sql-db-session-recommender
+services:
+  web:
+    project: ./client
+    language: js
+    host: staticwebapp
+    dist: dist
+hooks:
+  predeploy:
+     windows:
+       shell: pwsh
+       run: |
+        if (Test-Path .\SessionProcessor.zip) {
+            Remove-Item .\SessionProcessor.zip -Force
+        }
+        dotnet publish .\func
+        Compress-Archive .\func\bin\Debug\net6.0\publish\* SessionProcessor.zip
+        az functionapp deploy --clean true --src-path .\SessionProcessor.zip -g "$env:AZURE_RESOURCE_GROUP" -n "$env:FUNCTIONAPP_NMAE"
+       continueOnError: false
+       interactive: false
+     posix:
+       shell: sh
+       run: |
+        if [ -e SessionProcessor.zip ]; then
+        rm SessionProcessor.zip
+        fi
+        dotnet publish .\func
+        Compress-Archive .\func\bin\Debug\net6.0\publish\* SessionProcessor.zip
+        az functionapp deploy --clean true --src-path .\SessionProcessor.zip -g "$env:RESOURCE_GROUP" -n "$env:FUNCTIONAPP_NMAE"
+       continueOnError: false
+       interactive: false
+    
+       
+ 
+   
