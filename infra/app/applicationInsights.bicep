@@ -1,7 +1,6 @@
 param name string
 param location string = resourceGroup().location
 param tags object = {}
-param keyVaultName string
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: name
@@ -12,13 +11,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     Application_Type: 'web'
   }
 }
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-  name: keyVaultName
-}
-resource instrumentationKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  parent: keyVault
-  name: 'instrumentationKey'
-  properties: {
-    value: applicationInsights.properties.InstrumentationKey
-  }
-}
+
+output connectionString string = applicationInsights.properties.ConnectionString
+output instrumentationKey string = applicationInsights.properties.InstrumentationKey
+output name string = applicationInsights.name

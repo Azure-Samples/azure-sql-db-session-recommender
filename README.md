@@ -34,11 +34,11 @@ For more details on the solution check also the following articles:
 - [How I built a session recommender in 1 hour using Open AI](https://dev.to/azure/how-i-built-a-session-recommender-in-1-hour-using-open-ai-5419)
 - [Vector Similarity Search with Azure SQL database and OpenAI](https://devblogs.microsoft.com/azure-sql/vector-similarity-search-with-azure-sql-database-and-openai/)
 
-## Running the sample using Azd template
+## Running the sample using the Azure Developer CLI (azd) template
 
 The Azure Developer CLI (`azd`) is a developer-centric command-line interface (CLI) tool for creating Azure applications.
 
-You need to install it before running and deploying with Azure Developer CLI.
+You need to install it before running and deploying with the Azure Developer CLI.
 
 ### Windows
 
@@ -52,7 +52,7 @@ powershell -ex AllSigned -c "Invoke-RestMethod 'https://aka.ms/install-azd.ps1' 
 curl -fsSL https://aka.ms/install-azd.sh | bash
 ```
 
-After logging in with the following command, you will be able to use the azd cli to quickly provision and deploy the application.
+After logging in with the following command, you will be able to use azd cli to quickly provision and deploy the application.
 
 ```
 azd auth login
@@ -62,7 +62,7 @@ Then, execute the `azd init` command to initialize the environment.
 ```
 azd init -t Azure-Samples/azure-sql-db-session-recommender
 ```
-According to the prompt, enter an `env name`.
+According to the prompt, enter an environment name.
 
 Replace the placeholders values in the infra/main.parameters.json file with the correct values for your environment. Follow the documentation here: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) to get the GitHub token needed to deploy the Static Web App. Make sure the token created is a "classic" token that has access to the following scopes: repo, workflow, write:packages
 
@@ -71,7 +71,7 @@ Run `azd up` to provision all the resources to Azure and deploy the code to thos
 azd up 
 ```
 
-According to the prompt, select `subscription` and `location`, these are the necessary parameters when you create resources. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
+According to the prompt, select `subscription` and `location`, these are the necessary parameters when you create resources. After that, choose a resource group or create a new resource group. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
 
 ## Running the sample using Azure CLI
 

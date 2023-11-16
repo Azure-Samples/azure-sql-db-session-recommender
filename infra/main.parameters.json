@@ -1,27 +1,21 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "location": { 
-            "value": "${AZURE_LOCATION}"
-        },
-        "environmentName": {
-          "value": "${AZURE_ENV_NAME}"
-        },
-        "principalId":{
-            "value": "${AZURE_PRINCIPAL_ID}"
-        },  
-        "repositoryUrl": {
-            "value": "https://github.com/<your-account>/azure-sql-db-session-recommender"
-        },
-        "repositoryToken": {
-            "value": "<your-github-token>" 
-        },
-        "sqlAdminPassword": {
-          "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} sqlAdminPassword)"
-        },
-        "appUserPassword": {
-          "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} appUserPassword)"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "environmentName": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "principalId": {
+      "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "sqlAdminPassword": {
+      "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} sqlAdminPassword)"
+    },
+    "appUserPassword": {
+      "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} appUserPassword)"
     }
   }
+}

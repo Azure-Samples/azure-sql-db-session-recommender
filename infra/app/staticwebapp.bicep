@@ -9,28 +9,16 @@ param sku object = {
 param sqlServerLocation string
 param sqlServerId string
 @secure()
-param repositoryUrl string
-@secure()
-param repositoryToken string
-@secure()
 param sqlConnectionString string
 
 resource web 'Microsoft.Web/staticSites@2022-09-01' = {
   name: name
   location: location
   tags: tags
-  properties: {
-    repositoryUrl: repositoryUrl
-    branch: 'main'
-    repositoryToken: repositoryToken
-    buildProperties: {
-      appLocation: '/client'
-      apiLocation: '/api'
-      appArtifactLocation: '/dist'
-    }   
-  }
-  sku:sku
+  properties: {}
+  sku: sku
 }
+
 resource symbolicname 'Microsoft.Web/staticSites/databaseConnections@2022-09-01' = {
   name: 'default'
   parent: web
@@ -40,3 +28,6 @@ resource symbolicname 'Microsoft.Web/staticSites/databaseConnections@2022-09-01'
     resourceId: sqlServerId
   }
 }
+
+output name string = web.name
+output uri string = 'https://${web.properties.defaultHostname}'

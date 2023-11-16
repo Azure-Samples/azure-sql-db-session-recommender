@@ -59,9 +59,11 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
     }]
   }
 }
+
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
+
 resource storageAccountKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
   name: 'storageAccountKey'
@@ -69,5 +71,6 @@ resource storageAccountKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
     value: storage.listKeys().keys[0].value
   }
 }
+
 output name string = storage.name
 output primaryEndpoints object = storage.properties.primaryEndpoints

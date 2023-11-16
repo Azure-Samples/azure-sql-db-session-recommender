@@ -2,16 +2,16 @@ param functionAppName string
 param location string = resourceGroup().location
 param hostingPlanId string
 param storageAccountName string
-@secure()
-param instrumentationKey string
-@secure()
-param openAIEndpoint string
+param applicationInsightsConnectionString string
 @secure()
 param storageAccountKey string
 @secure()
-param openAiKey string
+param openAIEndpoint string
+@secure()
+param openAIKey string
 @secure()
 param sqlConnectionString string
+param tags object = {}
 
 resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
   name: functionAppName
@@ -20,10 +20,11 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
   identity: {
     type: 'SystemAssigned'
   }
+  tags: tags
   properties: {
-    serverFarmId: hostingPlanId   
-    siteConfig: {      
-      netFrameworkVersion: 'v6.0'
+    serverFarmId: hostingPlanId
+    siteConfig: {
+      netFrameworkVersion: 'v7.0'
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
@@ -42,13 +43,13 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
           value: '~4'
         }
         {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: instrumentationKey
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: applicationInsightsConnectionString
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet'
-        }        
+        }
         {
           name: 'AzureSQL.ConnectionString'
           value: sqlConnectionString
@@ -59,7 +60,7 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
         }
         {
           name: 'AzureOpenAI.Key'
-          value: openAiKey
+          value: openAIKey
         }
       ]
 
@@ -69,4 +70,5 @@ resource functionApp 'Microsoft.Web/sites@2021-03-01' = {
     httpsOnly: true
   }
 }
+
 output name string = functionApp.name

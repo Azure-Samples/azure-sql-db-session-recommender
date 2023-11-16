@@ -49,6 +49,7 @@ resource openAlKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
     value: account.listKeys().key1
   }
 }
+
 output endpoint string = account.properties.endpoint
 output id string = account.id
 output name string = account.name
