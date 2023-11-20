@@ -28,6 +28,8 @@ param functionAppName string = ''
 param applicationInsightsName string = ''
 param hostingPlanName string = ''
 param staticWebAppName string = ''
+param logAnalyticsName string = ''
+param dashboardName string = ''
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
@@ -112,16 +114,27 @@ module hostingPlan 'core/host/appserviceplan.bicep' = {
       name: 'Y1'
       tier: 'Dynamic'
     }
-    reserved: false
+    kind: 'linux'
   }
 }
 
-module applicationInsights 'app/applicationInsights.bicep' = {
+module logAnalytics 'core/monitor/loganalytics.bicep' ={
+  name: 'logAnalytics'
+  params: {
+    name: !empty(logAnalyticsName) ? logAnalyticsName : '${abbrs.insightsComponents}${resourceToken}'
+    location: location
+  }
+}
+
+module applicationInsights 'core/monitor/applicationinsights.bicep' = {
   name: 'monitoring'
   params: {
     location: location
     tags: tags
     name: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${resourceToken}'
+    includeDashboard: false
+    dashboardName: dashboardName
+    logAnalyticsWorkspaceId: logAnalytics.outputs.id
   }
 }
 
@@ -131,13 +144,14 @@ module functionApp 'app/functions.bicep' = {
     tags: union(tags, { 'azd-service-name': 'functionapp' })
     location: location
     storageAccountName: storageAccount.outputs.name
-    applicationInsightsConnectionString: applicationInsights.outputs.connectionString
     openAIKey: kv.getSecret('openAlKey')
     functionAppName: !empty(functionAppName) ? functionAppName : '${abbrs.webSitesFunctions}${resourceToken}'
     hostingPlanId: hostingPlan.outputs.id
     storageAccountKey: kv.getSecret('storageAccountKey')
     sqlConnectionString: kv.getSecret('AZURE-SQL-CONNECTION-STRING')
     openAIEndpoint: openAI.outputs.endpoint
+    keyVaultName: keyVault.outputs.name
+    applicationInsightsConnectionString: applicationInsights.outputs.connectionString
   }
   dependsOn: [database]
 }
@@ -165,3 +179,4 @@ output AZURE_TENANT_ID string = tenant().tenantId
 output APPLICATIONINSIGHTS_CONNECTION_STRING string = applicationInsights.outputs.connectionString
 output AZURE_STORAGE_NAME string = storageAccount.outputs.name
 output AZURE_STATIC_WEB_URL string = web.outputs.uri
+output LOG_ANALYTICS_ID string = logAnalytics.outputs.id
