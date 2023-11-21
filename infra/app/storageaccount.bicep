@@ -26,6 +26,7 @@ param networkAcls object = {
 param publicNetworkAccess string = 'Enabled'
 param sku object = { name: 'Standard_LRS' }
 param keyVaultName string
+param useKeyVault bool
 
 resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: name
@@ -60,11 +61,11 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = if (useKeyVault) {
   name: keyVaultName
 }
 
-resource storageAccountKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource storageAccountKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
   parent: keyVault
   name: 'storageAccountKey'
   properties: {

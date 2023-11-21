@@ -17,13 +17,15 @@ resource web 'Microsoft.Web/staticSites@2022-09-01' = {
   tags: tags
   properties: {}
   sku: sku
-  resource symbolicname 'databaseConnections@2022-09-01' = {
-    name: 'default'
-    properties: {
-      connectionString: sqlConnectionString
-      region: sqlServerLocation
-      resourceId: sqlServerId
-    }
+}
+
+resource symbolicname 'Microsoft.Web/staticSites/databaseConnections@2022-09-01' = {
+  parent: web
+  name: 'default'
+  properties: {
+    connectionString: sqlConnectionString
+    region: sqlServerLocation
+    resourceId: sqlServerId
   }
 }
 

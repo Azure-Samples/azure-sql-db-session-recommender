@@ -15,6 +15,8 @@ param appUserPassword string
 param openAIEndpoint string
 @secure()
 param openAIKey string
+param useKeyVault bool
+param openAIServiceName string
 
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: name
@@ -139,7 +141,7 @@ resource createTableScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = 
       }
       {
         name: 'OpenAIKey'
-        value: openAIKey
+        value: useKeyVault ? openAIKey : listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIServiceName), '2023-05-01').key1
       }
 
     ]
@@ -152,7 +154,7 @@ resource createTableScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = 
   }
 }
 
-resource sqlAdminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource sqlAdminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
   parent: keyVault
   name: 'sqlAdminPassword'
   properties: {
@@ -160,7 +162,7 @@ resource sqlAdminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' =
   }
 }
 
-resource appUserPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource appUserPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
   parent: keyVault
   name: 'appUserPassword'
   properties: {
@@ -168,7 +170,7 @@ resource appUserPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = 
   }
 }
 
-resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
   parent: keyVault
   name: connectionStringKey
   properties: {
@@ -176,12 +178,13 @@ resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022
   }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = if (useKeyVault) {
   name: keyVaultName
 }
 
 var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${appUser}'
 output connectionStringKey string = connectionStringKey
+output connectionString string = connectionString
 output databaseName string = sqlServer::database.name
 output name string = sqlServer.name
 output id string = sqlServer.id

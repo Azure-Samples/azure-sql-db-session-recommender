@@ -11,6 +11,7 @@ param sku object = {
   name: 'S0'
 }
 param keyVaultName string
+param useKeyVault bool
 
 resource account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: name
@@ -38,13 +39,13 @@ resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01
   }
 }]
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = if (useKeyVault) {
   name: keyVaultName
 }
 
-resource openAlKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource openAIKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
   parent: keyVault
-  name: 'openAlKey'
+  name: 'openAIKey'
   properties: {
     value: account.listKeys().key1
   }

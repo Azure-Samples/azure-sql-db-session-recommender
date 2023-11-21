@@ -30,6 +30,8 @@ param hostingPlanName string = ''
 param staticWebAppName string = ''
 param logAnalyticsName string = ''
 param dashboardName string = ''
+@description('Flag to Use keyvault to store and use keys')
+param useKeyVault bool = true
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
@@ -55,6 +57,7 @@ module openAI 'app/openai.bicep' = {
       }
     ]
     keyVaultName: keyVault.outputs.name
+    useKeyVault: useKeyVault
   }
 }
 
@@ -77,8 +80,10 @@ module database 'app/sqlserver.bicep' = {
     databaseName: dbName
     keyVaultName: keyVault.outputs.name
     name: !empty(dbServiceName) ? dbServiceName : '${abbrs.sqlServers}catalog-${resourceToken}'
-    openAIKey: kv.getSecret('openAlKey')
+    openAIKey: useKeyVault ? kv.getSecret('openAIKey') : ''
     openAIEndpoint: openAI.outputs.endpoint
+    openAIServiceName: openAI.outputs.name
+    useKeyVault: useKeyVault
   }
 }
 
@@ -98,7 +103,7 @@ module web 'app/staticwebapp.bicep' = {
     name: !empty(staticWebAppName) ? staticWebAppName : '${abbrs.webStaticSites}${resourceToken}'
     location: location
     tags: union(tags, { 'azd-service-name': 'web' })
-    sqlConnectionString: kv.getSecret('AZURE-SQL-CONNECTION-STRING')
+    sqlConnectionString: useKeyVault ? kv.getSecret('AZURE-SQL-CONNECTION-STRING') : '${database.outputs.connectionString}; Password=${appUserPassword}'
     sqlServerId: database.outputs.id
     sqlServerLocation: location
   }
@@ -144,14 +149,16 @@ module functionApp 'app/functions.bicep' = {
     tags: union(tags, { 'azd-service-name': 'functionapp' })
     location: location
     storageAccountName: storageAccount.outputs.name
-    openAIKey: kv.getSecret('openAlKey')
+    openAIKey: useKeyVault ? kv.getSecret('openAIKey') : ''
     functionAppName: !empty(functionAppName) ? functionAppName : '${abbrs.webSitesFunctions}${resourceToken}'
     hostingPlanId: hostingPlan.outputs.id
-    storageAccountKey: kv.getSecret('storageAccountKey')
-    sqlConnectionString: kv.getSecret('AZURE-SQL-CONNECTION-STRING')
+    storageAccountKey: useKeyVault ? kv.getSecret('storageAccountKey') : ''
+    sqlConnectionString: useKeyVault ? kv.getSecret('AZURE-SQL-CONNECTION-STRING') : '${database.outputs.connectionString}; Password=${appUserPassword}'
     openAIEndpoint: openAI.outputs.endpoint
     keyVaultName: keyVault.outputs.name
     applicationInsightsConnectionString: applicationInsights.outputs.connectionString
+    useKeyVault: useKeyVault
+    openAIName: openAI.outputs.name
   }
   dependsOn: [database]
 }
@@ -163,10 +170,11 @@ module storageAccount 'app/storageaccount.bicep' = {
     name: !empty(storageAccountName) ? storageAccountName : '${abbrs.storageStorageAccounts}${resourceToken}'
     location: location
     keyVaultName: keyVault.outputs.name
+    useKeyVault: useKeyVault
   }
 }
 
-resource kv 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+resource kv 'Microsoft.KeyVault/vaults@2023-02-01' existing = if (useKeyVault) {
   name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
 }
 
@@ -180,3 +188,4 @@ output APPLICATIONINSIGHTS_CONNECTION_STRING string = applicationInsights.output
 output AZURE_STORAGE_NAME string = storageAccount.outputs.name
 output AZURE_STATIC_WEB_URL string = web.outputs.uri
 output LOG_ANALYTICS_ID string = logAnalytics.outputs.id
+output USE_KEY_VAULT bool = useKeyVault
