@@ -84,6 +84,7 @@ module database 'app/sqlserver.bicep' = {
     openAIEndpoint: openAI.outputs.endpoint
     openAIServiceName: openAI.outputs.name
     useKeyVault: useKeyVault
+    principalId: principalId
   }
 }
 

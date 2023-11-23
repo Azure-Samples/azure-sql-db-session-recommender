@@ -17,6 +17,7 @@ param openAIEndpoint string
 param openAIKey string
 param useKeyVault bool
 param openAIServiceName string
+param principalId string
 
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: name
@@ -43,6 +44,16 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
       // This is not sufficient, because we also want to allow direct access from developer machine, for debugging purposes.
       startIpAddress: '0.0.0.0'
       endIpAddress: '0.0.0.0'
+    }
+  }
+
+  resource symbolicname 'administrators@2022-05-01-preview' = {
+    name: 'ActiveDirectory'
+    properties: {
+      administratorType: 'ActiveDirectory'
+      login: 'EntraAdmin'
+      sid: principalId
+      tenantId: tenant().tenantId
     }
   }
 }
