@@ -73,6 +73,11 @@ azd up
 
 According to the prompt, select `subscription` and `location`, these are the necessary parameters when you create resources. After that, choose a resource group or create a new resource group. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
 
+**Note**: Resource Group Scoped Deployment is currently an alpha feature, so please run the following command before running command `azd up`.
+```
+azd config set alpha.resourceGroupDeployments on
+```
+
 ## Running the sample using Azure CLI
 
 Make sure you have [AZ CLI installed](https://learn.microsoft.com/en-us/cli/azure/). It is also recommeneded to use VS Code with the Azure Functions extension installed.
