@@ -126,10 +126,12 @@ cd client
 npm install
 ```
 
-once finished, go back to the sample root and then
+once finished, create a `./func/local.settings.json` and `.env` starting from provided samples files, and fill out the settings using the correct values for your environment. 
+
+From the sample root folder run:
 
 ```bash
-swa start --app-location ./client --data-api-location .\swa-db-connections\
+swa start --app-location ./client --data-api-location ./swa-db-connections/
 ```
 
 ## (Optional) Use a custom authentication provider with Static Web Apps
