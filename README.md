@@ -58,13 +58,15 @@ After logging in with the following command, you will be able to use azd cli to 
 
 ## Authenticate with Azure
 
+Make sure AZD CLI can access Azure resources. You can use the following command to log in to Azure:
+
 ```
 azd auth login
 ```
 
-Then, execute the `azd init` command to initialize the environment.
-
 ## Initialize local environment
+
+Execute the `azd init` command to initialize the environment.
 
 **Note**: Resource Group Scoped Deployment is currently an alpha feature, so please run the following command before running command `azd up`.
 
