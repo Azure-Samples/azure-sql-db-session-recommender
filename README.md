@@ -92,6 +92,8 @@ azd up
 
 According to the prompt, select `subscription` and `location`, these are the necessary parameters when you create resources. After that, choose a resource group or create a new resource group. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
 
+**Note**: Make sure to pick a region where all services are available like, for example, *West Europe* or *East US 2*
+
 ## Test the solution
 
 Add a new row to the `Sessions` table using the following SQL statement:
