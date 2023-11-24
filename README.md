@@ -138,11 +138,9 @@ The folder `api` contains a sample function to customize the authentication proc
 "permissions": [
     {
         "role": "microsoft",
-        "actions": [
-        {
+        "actions": [{
             "action": "execute"
-        }
-        ]
+        }]
     }
 ]
 ```
