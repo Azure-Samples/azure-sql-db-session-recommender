@@ -71,7 +71,7 @@ module openAIRoleUser 'core/security/role.bicep' = {
 }
 
 module database 'app/sqlserver.bicep' = {
-  name: 'databse'
+  name: 'database'
   params: {
     tags: tags
     location: location
