@@ -397,7 +397,11 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# AZD
+.azure
+
 # Custom
 .env
 azuredeploy.parameters.json
 *.zip
+
