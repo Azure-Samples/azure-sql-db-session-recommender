@@ -64,15 +64,7 @@ Make sure AZD CLI can access Azure resources. You can use the following command 
 azd auth login
 ```
 
-## Initialize local environment
-
-Execute the `azd init` command to initialize the environment.
-
-**Note**: Resource Group Scoped Deployment is currently an alpha feature, so please run the following command before running command `azd up`.
-
-```
-azd config set alpha.resourceGroupDeployments on
-```
+## Initialize the template
 
 Then download the template to the current directory:
 
@@ -83,6 +75,12 @@ azd init -t Azure-Samples/azure-sql-db-session-recommender
 According to the prompt, enter an environment name.
 
 ## Deploy the sample
+
+**Note**: Resource Group Scoped Deployment is currently an alpha feature, so please run the following command before running command `azd up`.
+
+```
+azd config set alpha.resourceGroupDeployments on
+```
 
 Run `azd up` to provision all the resources to Azure and deploy the code to those resources.
 
