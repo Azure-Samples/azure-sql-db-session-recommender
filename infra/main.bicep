@@ -61,15 +61,6 @@ module openAI 'app/openai.bicep' = {
   }
 }
 
-module openAIRoleUser 'core/security/role.bicep' = {
-  name: 'openai-role-user'
-  params: {
-    principalId: principalId
-    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
-    principalType: 'User'
-  }
-}
-
 module database 'app/sqlserver.bicep' = {
   name: 'database'
   params: {
