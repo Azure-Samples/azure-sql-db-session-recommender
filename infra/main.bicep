@@ -161,7 +161,6 @@ module functionApp 'app/functions.bicep' = {
     useKeyVault: useKeyVault
     openAIName: openAI.outputs.name
   }
-  dependsOn: [database]
 }
 
 module storageAccount 'app/storageaccount.bicep' = {

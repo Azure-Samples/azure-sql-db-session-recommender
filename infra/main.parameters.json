@@ -17,7 +17,7 @@
     "appUserPassword": {
       "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} appUserPassword)"
     },
-    "USE_KEY_VAULT": {
+    "useKeyVault": {
       "value": "${USE_KEY_VAULT=true}"
     }
   }
