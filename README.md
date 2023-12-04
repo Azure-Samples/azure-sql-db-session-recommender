@@ -100,8 +100,6 @@ Using the Azure Developer CLI, you can setup your pipelines, monitor your applic
 azd pipeline config
 ```
 
-**Note**:If you are using an existing resource group or creating a non default resource group, please modify the value of `AZURE_RESOURCE_GROUP` in `.github/workflows/azure-dev.yml` berfore running `azd pipeline config`.
-
 ## Test the solution
 
 Add a new row to the `Sessions` table using the following SQL statement:
