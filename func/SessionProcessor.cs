@@ -73,8 +73,10 @@ namespace SessionRecommender.SessionProcessor
 
                     logger.LogInformation($"[{change.Item.Id}] Attempt {attempts} of 3 to get embeddings.");
 
+                    var deploymentName = Environment.GetEnvironmentVariable("AzureOpenAI.DeploymentName");
+                    var requestUri = "/openai/deployments/" + deploymentName + "/embeddings?api-version=2023-03-15-preview";
                     var response = await httpClient.PostAsJsonAsync(
-                        "/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview",
+                        requestUri,
                         new { input = change.Item.Title + ':' + change.Item.Abstract }
                     );
 
