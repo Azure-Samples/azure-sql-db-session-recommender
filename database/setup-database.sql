@@ -1,5 +1,6 @@
 :setvar OpenAIUrl https://.openai.azure.com
 :setvar OpenAIKey 
+:setvar OpenAIDeploymentName ADD-YOUR-OPENAI-DEPLOYMENT-NAME
 
 /*
     Enable change tracking on the database
@@ -119,7 +120,7 @@ set @payload = json_object('input': @text);
 
 begin try
     exec @retval = sp_invoke_external_rest_endpoint
-        @url = '$(OpenAIUrl)/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
+        @url = '$(OpenAIUrl)/openai/deployments/$(OpenAIDeploymentName)/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
         @credential = [$(OpenAIUrl)],
         @payload = @payload,
