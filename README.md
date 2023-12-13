@@ -38,6 +38,13 @@ For more details on the solution check also the following articles:
 
 The Azure Developer CLI (`azd`) is a developer-centric command-line interface (CLI) tool for creating Azure applications.
 
+## Prerequisites
+
+- Install [AZD CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
+- Install [.NET SDK](https://dotnet.microsoft.com/download)
+- Install [Node.js](https://nodejs.org/download/)
+- Install [SWA CLI](https://azure.github.io/static-web-apps-cli/docs/use/install#installing-the-cli)
+
 ## Install AZD CLI
 
 You need to install it before running and deploying with the Azure Developer CLI.
