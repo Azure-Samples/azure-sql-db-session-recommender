@@ -214,9 +214,9 @@ go
 /* 
 Create user
 */
-if not exists(select * from sys.database_principals where name = 'session_recommender_app')
+if not exists(select * from sys.database_principals where name = '$(APPUSERNAME)')
 begin
-    create user session_recommender_app with password = 'unEno!h5!&*KP420xds&@P901afb$^M';
-    alter role db_owner add member session_recommender_app;
+    create user $(APPUSERNAME) with password = '$(APPUSERPASSWORD)';
+    alter role db_owner add member $(APPUSERNAME);
 end
 go
