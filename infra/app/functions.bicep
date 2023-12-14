@@ -15,6 +15,7 @@ param tags object = {}
 param applicationInsightsConnectionString string
 param useKeyVault bool
 param openAIName string
+param OpenAIDeploymentName string = 'embeddings'
 
 module functionApp '../core/host/functions.bicep' = {
   name: 'function1'
@@ -37,6 +38,7 @@ module functionApp '../core/host/functions.bicep' = {
       APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsightsConnectionString
       'AzureSQL.ConnectionString': sqlConnectionString
       'AzureOpenAI.Endpoint': openAIEndpoint
+      'AzureOpenAI.DeploymentName': OpenAIDeploymentName
       'AzureOpenAI.Key': useKeyVault ? openAIKey : listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIName), '2023-05-01').key1
     }
   }
