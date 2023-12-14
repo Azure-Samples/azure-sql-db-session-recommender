@@ -1,5 +1,7 @@
-:setvar OpenAIUrl https://.openai.azure.com
-:setvar OpenAIKey 
+:setvar OpenAIUrl https://ADD-YOUR-OPENAI-RESOURCE-NAME.openai.azure.com
+:setvar OpenAIKey ADD-YOUR-OPENAI-KEY
+:setvar APPUSERNAME ADD-YOUR-DB-USER-NAME
+:setvar APPUSERPASSWORD ADD-YOUR-DB-PASSWORD
 :setvar OpenAIDeploymentName ADD-YOUR-OPENAI-DEPLOYMENT-NAME
 
 /*
