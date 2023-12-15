@@ -1,0 +1,6 @@
+SWA -> STANDARD
+Create Entra ID "Register Enterprise App"
+Add App in certificates / secrects
+Enable "ID Tokens" in Authentication
+Add Web platform with url:
+https://<app>.azurestaticapps.net/.auth/login/aad/callback
