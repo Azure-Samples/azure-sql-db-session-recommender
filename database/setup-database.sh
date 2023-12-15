@@ -1,7 +1,9 @@
-:setvar OpenAIUrl https://.openai.azure.com
-:setvar OpenAIKey 
-:setvar OpenAIDeploymentName ADD-YOUR-OPENAI-DEPLOYMENT-NAME
+ #!/bin/sh
+ 
+wget https://github.com/microsoft/go-sqlcmd/releases/download/v0.8.1/sqlcmd-v0.8.1-linux-x64.tar.bz2
+tar x -f sqlcmd-v0.8.1-linux-x64.tar.bz2 -C .
 
+cat <<SCRIPT_END > ./setup-database.sql
 /*
     Enable change tracking on the database
 */
@@ -23,14 +25,14 @@ go
 /*
     Create database credentials to store API key
 */
-if exists(select * from sys.[database_scoped_credentials] where name = '$(OpenAIUrl)')
+if exists(select * from sys.[database_scoped_credentials] where name = '${OpenAIUrl}')
 begin
-	drop database scoped credential [$(OpenAIUrl)];
+	drop database scoped credential [${OpenAIUrl}];
 end
 go
 
-create database scoped credential [$(OpenAIUrl)]
-with identity = 'HTTPEndpointHeaders', secret = '{"api-key":"$(OpenAIKey)"}';
+create database scoped credential [${OpenAIUrl}]
+with identity = 'HTTPEndpointHeaders', secret = '{"api-key":"${OpenAIKey}"}';
 go
 
 /*
@@ -120,9 +122,9 @@ set @payload = json_object('input': @text);
 
 begin try
     exec @retval = sp_invoke_external_rest_endpoint
-        @url = '$(OpenAIUrl)/openai/deployments/$(OpenAIDeploymentName)/embeddings?api-version=2023-03-15-preview',
+        @url = '${OpenAIUrl}/openai/deployments/${OpenAIDeploymentName}/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
-        @credential = [$(OpenAIUrl)],
+        @credential = [${OpenAIUrl}],
         @payload = @payload,
         @response = @response output;
 end try
@@ -221,3 +223,5 @@ begin
     alter role db_owner add member session_recommender_app;
 end
 go
+SCRIPT_END
+./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -i ./setup-database.sql
