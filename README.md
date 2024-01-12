@@ -1,9 +1,13 @@
 ---
 page_type: sample
 languages:
+- azdeveloper
 - csharp
 - sql
 - tsql
+- javascript
+- html
+- bicep
 products:
 - azure-functions
 - azure-sql-database
@@ -13,9 +17,11 @@ products:
 - azure-sqlserver-vm
 - dotnet
 - azure-openai
+urlFragment: azure-sql-db-session-recommender
 name: Session Recommender using Azure SQL DB, Open AI and Vector Search
 description: Build a session recommender using Jamstack and Event-Driven architecture, using Azure SQL DB to store and search vectors embeddings generated using OpenAI
 ---
+<!-- YAML front-matter schema: https://review.learn.microsoft.com/en-us/help/contribute/samples/process/onboarding?branch=main#supported-metadata-fields-for-readmemd -->
 
 # Session Recommender Sample
 
