@@ -13,7 +13,7 @@ export async function getSessions(content) {
   const response = await fetch("/data-api/rest/find", settings);
   if (!response.ok) {
     return { 
-      sessions: '[]', 
+      sessions: [], 
       errorInfo: {
         errorSource: 'Server',
         errorCode: response.status,
