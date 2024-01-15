@@ -1,9 +1,13 @@
 ---
 page_type: sample
 languages:
+- azdeveloper
 - csharp
 - sql
 - tsql
+- javascript
+- html
+- bicep
 products:
 - azure-functions
 - azure-sql-database
@@ -13,9 +17,11 @@ products:
 - azure-sqlserver-vm
 - dotnet
 - azure-openai
+urlFragment: azure-sql-db-session-recommender
 name: Session Recommender using Azure SQL DB, Open AI and Vector Search
 description: Build a session recommender using Jamstack and Event-Driven architecture, using Azure SQL DB to store and search vectors embeddings generated using OpenAI
 ---
+<!-- YAML front-matter schema: https://review.learn.microsoft.com/en-us/help/contribute/samples/process/onboarding?branch=main#supported-metadata-fields-for-readmemd -->
 
 # Session Recommender Sample
 
@@ -57,7 +63,7 @@ powershell -ex AllSigned -c "Invoke-RestMethod 'https://aka.ms/install-azd.ps1' 
 
 ### Linux/MacOS
 
-```
+```bash
 curl -fsSL https://aka.ms/install-azd.sh | bash
 ```
 
@@ -67,7 +73,7 @@ After logging in with the following command, you will be able to use azd cli to 
 
 Make sure AZD CLI can access Azure resources. You can use the following command to log in to Azure:
 
-```
+```bash
 azd auth login
 ```
 
@@ -75,7 +81,7 @@ azd auth login
 
 Then download the template to the current directory:
 
-```
+```bash
 azd init -t Azure-Samples/azure-sql-db-session-recommender
 ```
 
@@ -85,19 +91,27 @@ According to the prompt, enter an environment name.
 
 **Note**: Resource Group Scoped Deployment is currently an alpha feature, so please run the following command before running command `azd up`.
 
-```
+```bash
 azd config set alpha.resourceGroupDeployments on
 ```
 
 Run `azd up` to provision all the resources to Azure and deploy the code to those resources.
 
-```
+```bash
 azd up 
 ```
 
 According to the prompt, select `subscription` and `location`, these are the necessary parameters when you create resources. After that, choose a resource group or create a new resource group. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
 
 **Note**: Make sure to pick a region where all services are available like, for example, *West Europe* or *East US 2*
+
+## GitHub Actions
+
+Using the Azure Developer CLI, you can setup your pipelines, monitor your application, test and debug locally.
+
+```bash
+azd pipeline config
+```
 
 ## Test the solution
 
@@ -126,12 +140,12 @@ The whole solution can be executed locally, using [Static Web App CLI](https://g
 
 Install the required node packages needed by the fronted:
 
-```
+```bash
 cd client
 npm install
 ```
 
-once finished, create a `./func/local.settings.json` and `.env` starting from provided samples files, and fill out the settings using the correct values for your environment. 
+once finished, create a `./func/local.settings.json` and `.env` starting from provided samples files, and fill out the settings using the correct values for your environment.
 
 From the sample root folder run:
 
@@ -155,4 +169,3 @@ The folder `api` contains a sample function to customize the authentication proc
 ```
 
 This step is optional and is provided mainly as an example on how to use custom authentication with SWA and DAB. It is not used in the solution.
-
