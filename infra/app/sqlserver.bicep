@@ -15,7 +15,7 @@ param appUserPassword string
 param openAIEndpoint string
 @secure()
 param openAIKey string
-param OpenAIDeploymentName string = 'embeddings'
+param openAIDeploymentName string = 'embeddings'
 param useKeyVault bool
 param openAIServiceName string
 param principalId string
@@ -153,7 +153,7 @@ resource createTableScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = 
       }
       {
         name: 'OpenAIDeploymentName'
-        value: OpenAIDeploymentName
+        value: openAIDeploymentName
       }
       {
         name: 'OpenAIKey'

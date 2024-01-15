@@ -9,7 +9,7 @@ param environmentName string
 param location string = resourceGroup().location
 param openAIServiceName string = ''
 param openAISkuName string = 'S0'
-param embeddingDeploymentName string = 'embeddings-123'
+param embeddingDeploymentName string = 'embeddings'
 param embeddingDeploymentCapacity int = 30
 param embeddingModelName string = 'text-embedding-ada-002'
 @description('Id of the user or app to assign application roles')
@@ -74,7 +74,7 @@ module database 'app/sqlserver.bicep' = {
     openAIKey: useKeyVault ? kv.getSecret('openAIKey') : ''
     openAIEndpoint: openAI.outputs.endpoint
     openAIServiceName: openAI.outputs.name
-    OpenAIDeploymentName: embeddingDeploymentName
+    openAIDeploymentName: embeddingDeploymentName
     useKeyVault: useKeyVault
     principalId: principalId
   }
@@ -148,7 +148,7 @@ module functionApp 'app/functions.bicep' = {
     storageAccountKey: useKeyVault ? kv.getSecret('storageAccountKey') : ''
     sqlConnectionString: useKeyVault ? kv.getSecret('AZURE-SQL-CONNECTION-STRING') : '${database.outputs.connectionString}; Password=${appUserPassword}'
     openAIEndpoint: openAI.outputs.endpoint
-    OpenAIDeploymentName: embeddingDeploymentName
+    openAIDeploymentName: embeddingDeploymentName
     keyVaultName: keyVault.outputs.name
     applicationInsightsConnectionString: applicationInsights.outputs.connectionString
     useKeyVault: useKeyVault
