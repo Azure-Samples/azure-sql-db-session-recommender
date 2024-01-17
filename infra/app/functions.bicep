@@ -4,11 +4,14 @@ param hostingPlanId string
 param storageAccountName string
 @secure()
 param openAIEndpoint string
+param openAIKeyName string
 @secure()
 param sqlConnectionString string
 param keyVaultName string
 param tags object = {}
 param applicationInsightsConnectionString string
+param useKeyVault bool
+param keyVaultEndpoint string = ''
 param openAIName string
 param openAIDeploymentName string = 'embeddings'
 
@@ -34,7 +37,8 @@ module functionApp '../core/host/functions.bicep' = {
       'AzureSQL.ConnectionString': sqlConnectionString
       'AzureOpenAI.Endpoint': openAIEndpoint
       'AzureOpenAI.DeploymentName': openAIDeploymentName
-      'AzureOpenAI.Key': listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIName), '2023-05-01').key1
+      'AzureOpenAI.Key': useKeyVault ? openAIKeyName : listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIName), '2023-05-01').key1
+      'AzureKeyVault.Endpoint': useKeyVault ? keyVaultEndpoint : ''
     }
   }
 }

@@ -10,6 +10,8 @@ param publicNetworkAccess string = 'Enabled'
 param sku object = {
   name: 'S0'
 }
+param keyVaultName string
+param useKeyVault bool
 
 resource account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: name
@@ -37,6 +39,19 @@ resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01
   }
 }]
 
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = if (useKeyVault) {
+  name: keyVaultName
+}
+
+resource openAIKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
+  parent: keyVault
+  name: 'openAIKey'
+  properties: {
+    value: account.listKeys().key1
+  }
+}
+
 output endpoint string = account.properties.endpoint
 output id string = account.id
 output name string = account.name
+output openAIKeyName string = openAIKey.name

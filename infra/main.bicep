@@ -30,6 +30,8 @@ param hostingPlanName string = ''
 param staticWebAppName string = ''
 param logAnalyticsName string = ''
 param dashboardName string = ''
+@description('Flag to Use keyvault to store and use keys')
+param useKeyVault bool = true
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
@@ -63,6 +65,8 @@ module openAI 'app/openai.bicep' = {
         capacity: embeddingDeploymentCapacity
       }
     ]
+    keyVaultName: keyVault.outputs.name
+    useKeyVault: useKeyVault
   }
 }
 
@@ -83,7 +87,7 @@ module database 'app/sqlserver.bicep' = {
   }
 }
 
-module keyVault 'app/keyvault.bicep' = {
+module keyVault 'core/security/keyvault.bicep' = {
   name: 'keyvault'
   scope: rg
   params: {
@@ -151,6 +155,7 @@ module functionApp 'app/functions.bicep' = {
     tags: union(tags, { 'azd-service-name': 'functionapp' })
     location: location
     storageAccountName: storageAccount.outputs.name
+    openAIKeyName: useKeyVault ? openAI.outputs.openAIKeyName : ''
     functionAppName: !empty(functionAppName) ? functionAppName : '${abbrs.webSitesFunctions}${resourceToken}'
     hostingPlanId: hostingPlan.outputs.id
     sqlConnectionString: '${database.outputs.connectionString}; Password=${appUserPassword}'
@@ -158,7 +163,9 @@ module functionApp 'app/functions.bicep' = {
     openAIDeploymentName: embeddingDeploymentName
     keyVaultName: keyVault.outputs.name
     applicationInsightsConnectionString: applicationInsights.outputs.connectionString
+    useKeyVault: useKeyVault
     openAIName: openAI.outputs.name
+    keyVaultEndpoint: keyVault.outputs.endpoint
   }
 }
 
@@ -182,3 +189,4 @@ output APPLICATIONINSIGHTS_CONNECTION_STRING string = applicationInsights.output
 output AZURE_STORAGE_NAME string = storageAccount.outputs.name
 output AZURE_STATIC_WEB_URL string = web.outputs.uri
 output LOG_ANALYTICS_ID string = logAnalytics.outputs.id
+output USE_KEY_VAULT bool = useKeyVault

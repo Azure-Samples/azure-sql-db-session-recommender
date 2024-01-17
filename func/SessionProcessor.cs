@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -44,7 +46,20 @@ namespace SessionRecommender.SessionProcessor
 
         static SessionProcessor()
         {
-            var key = Environment.GetEnvironmentVariable("AzureOpenAI.Key");
+            var keyVaultEndpoint = Environment.GetEnvironmentVariable("AzureKeyVault.Endpoint");
+            var key = "openai_key";
+            if (string.IsNullOrEmpty(keyVaultEndpoint))
+            {
+                var openAIKeyName = Environment.GetEnvironmentVariable("AzureOpenAI.Key");
+                var vaultUrl = Environment.GetEnvironmentVariable("AzureKeyVault.Endpoint");
+                var client = new SecretClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+                key = client.GetSecret(openAIKeyName).Value.Value;
+            }
+            else
+            {
+                key = Environment.GetEnvironmentVariable("AzureOpenAI.Key");
+            }
+            
             var endpoint = Environment.GetEnvironmentVariable("AzureOpenAI.Endpoint");
 
             httpClient = new HttpClient();
