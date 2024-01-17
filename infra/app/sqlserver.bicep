@@ -4,7 +4,6 @@ param location string = resourceGroup().location
 param tags object = {}
 param appUser string = 'appUser'
 param databaseName string
-param keyVaultName string
 param sqlAdmin string = 'sqlAdmin'
 param connectionStringKey string = 'AZURE-SQL-CONNECTION-STRING'
 @secure()
@@ -13,10 +12,7 @@ param sqlAdminPassword string
 param appUserPassword string
 @secure()
 param openAIEndpoint string
-@secure()
-param openAIKey string
 param openAIDeploymentName string = 'embeddings'
-param useKeyVault bool
 param openAIServiceName string
 param principalId string
 
@@ -157,7 +153,7 @@ resource createTableScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = 
       }
       {
         name: 'OpenAIKey'
-        value: useKeyVault ? openAIKey : listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIServiceName), '2023-05-01').key1
+        value: listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIServiceName), '2023-05-01').key1
       }
 
     ]
@@ -168,34 +164,6 @@ resource createTableScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = 
       'https://raw.githubusercontent.com/Azure-Samples/azure-sql-db-session-recommender/main/database/setup-database.sh'
     ]
   }
-}
-
-resource sqlAdminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
-  parent: keyVault
-  name: 'sqlAdminPassword'
-  properties: {
-    value: sqlAdminPassword
-  }
-}
-
-resource appUserPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
-  parent: keyVault
-  name: 'appUserPassword'
-  properties: {
-    value: appUserPassword
-  }
-}
-
-resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVault) {
-  parent: keyVault
-  name: connectionStringKey
-  properties: {
-    value: '${connectionString}; Password=${appUserPassword}'
-  }
-}
-
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = if (useKeyVault) {
-  name: keyVaultName
 }
 
 var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${appUser}'
