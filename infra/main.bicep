@@ -29,7 +29,6 @@ param applicationInsightsName string = ''
 param hostingPlanName string = ''
 param staticWebAppName string = ''
 param logAnalyticsName string = ''
-param dashboardName string = ''
 @description('Flag to Use keyvault to store and use keys')
 param useKeyVault bool = true
 var abbrs = loadJsonContent('./abbreviations.json')
@@ -142,8 +141,6 @@ module applicationInsights 'core/monitor/applicationinsights.bicep' = {
     location: location
     tags: tags
     name: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${resourceToken}'
-    includeDashboard: false
-    dashboardName: dashboardName
     logAnalyticsWorkspaceId: logAnalytics.outputs.id
   }
 }
@@ -169,7 +166,7 @@ module functionApp 'app/functions.bicep' = {
   }
 }
 
-module storageAccount 'app/storageaccount.bicep' = {
+module storageAccount 'core/storage/storage-account.bicep' = {
   name: 'storage'
   scope: rg
   params: {
