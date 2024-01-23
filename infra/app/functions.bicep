@@ -34,11 +34,11 @@ module functionApp '../core/host/functions.bicep' = {
       FUNCTIONS_WORKER_RUNTIME: 'dotnet'
       WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.Storage/storageAccounts', storageAccountName), '2022-05-01').keys[0].value}'
       APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsightsConnectionString
-      'AzureSQL.ConnectionString': sqlConnectionString
-      'AzureOpenAI.Endpoint': openAIEndpoint
-      'AzureOpenAI.DeploymentName': openAIDeploymentName
-      'AzureOpenAI.Key': useKeyVault ? openAIKeyName : listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIName), '2023-05-01').key1
-      'AzureKeyVault.Endpoint': useKeyVault ? keyVaultEndpoint : ''
+      AZURE_SQL_CONNECTION_STRING: sqlConnectionString
+      AZURE_OPENAI_ENDPOINT: openAIEndpoint
+      AZURE_OPENAI_DEPLOYMENT_NAME: openAIDeploymentName
+      AZURE_OPENAI_KEY: useKeyVault ? openAIKeyName : listKeys(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.CognitiveServices/accounts', openAIName), '2023-05-01').key1
+      AZURE_KEY_VAULT_ENDPOINT: useKeyVault ? keyVaultEndpoint : ''
     }
   }
 }

@@ -46,21 +46,20 @@ namespace SessionRecommender.SessionProcessor
 
         static SessionProcessor()
         {
-            var keyVaultEndpoint = Environment.GetEnvironmentVariable("AzureKeyVault.Endpoint");
+            var keyVaultEndpoint = Environment.GetEnvironmentVariable("AZURE_KEY_VAULT_ENDPOINT");
             var key = "openai_key";
             if (string.IsNullOrEmpty(keyVaultEndpoint))
             {
-                var openAIKeyName = Environment.GetEnvironmentVariable("AzureOpenAI.Key");
-                var vaultUrl = Environment.GetEnvironmentVariable("AzureKeyVault.Endpoint");
-                var client = new SecretClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+                var openAIKeyName = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
+                var client = new SecretClient(vaultUri: new Uri(keyVaultEndpoint), credential: new DefaultAzureCredential());
                 key = client.GetSecret(openAIKeyName).Value.Value;
             }
             else
             {
-                key = Environment.GetEnvironmentVariable("AzureOpenAI.Key");
+                key = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
             }
             
-            var endpoint = Environment.GetEnvironmentVariable("AzureOpenAI.Endpoint");
+            var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
 
             httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(endpoint);
@@ -69,7 +68,7 @@ namespace SessionRecommender.SessionProcessor
 
         [FunctionName("SessionProcessor")]
         public static async Task Run(
-            [SqlTrigger("[web].[sessions]", "AzureSQL.ConnectionString")]
+            [SqlTrigger("[web].[sessions]", "AZURE_SQL_CONNECTION_STRING")]
             IReadOnlyList<SqlChange<Session>> changes,
             ILogger logger)
         {
@@ -88,7 +87,7 @@ namespace SessionRecommender.SessionProcessor
 
                     logger.LogInformation($"[{change.Item.Id}] Attempt {attempts} of 3 to get embeddings.");
 
-                    var deploymentName = Environment.GetEnvironmentVariable("AzureOpenAI.DeploymentName");
+                    var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME");
                     var requestUri = "/openai/deployments/" + deploymentName + "/embeddings?api-version=2023-03-15-preview";
                     var response = await httpClient.PostAsJsonAsync(
                         requestUri,
@@ -109,7 +108,7 @@ namespace SessionRecommender.SessionProcessor
                     var e = jd.SelectToken("data[0].embedding");
                     if (e != null)
                     {
-                        using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AzureSQL.ConnectionString"));
+                        using var conn = new SqlConnection(Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING"));
                         await conn.ExecuteAsync(
                             "web.upsert_session_abstract_embeddings",
                             commandType: CommandType.StoredProcedure,
