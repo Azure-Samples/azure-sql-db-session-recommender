@@ -48,7 +48,7 @@ namespace SessionRecommender.SessionProcessor
         {
             var keyVaultEndpoint = Environment.GetEnvironmentVariable("AZURE_KEY_VAULT_ENDPOINT");
             var key = "openai_key";
-            if (string.IsNullOrEmpty(keyVaultEndpoint))
+            if (!string.IsNullOrEmpty(keyVaultEndpoint))
             {
                 var openAIKeyName = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
                 var client = new SecretClient(vaultUri: new Uri(keyVaultEndpoint), credential: new DefaultAzureCredential());
