@@ -115,7 +115,7 @@ azd pipeline config
 
 ## Test the solution
 
-Add a new row to the `Sessions` table using the following SQL statement:
+Add a new row to the `Sessions` table using the following SQL statement (you can use tools like [Azure Data Studio](https://learn.microsoft.com/en-us/azure-data-studio/quickstart-sql-database) or [SQL Server Management Studio](https://learn.microsoft.com/en-us/azure/azure-sql/database/connect-query-ssms?view=azuresql) to connect to the database. No need to install them if you don't want. In that case you can use the [SQL Editor in the Azure Portal](https://learn.microsoft.com/en-us/azure/azure-sql/database/connect-query-portal?view=azuresql)):
 
 ```sql
 insert into web.sessions 
