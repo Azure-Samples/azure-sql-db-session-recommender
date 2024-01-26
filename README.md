@@ -79,7 +79,7 @@ azd auth login
 
 ## Initialize the template
 
-Then download the template to the current directory:
+Then, execute the `azd init` command to initialize the environment (You do not need to run this command if you already have the code or have opened this in a Codespace or DevContainer).
 
 ```bash
 azd init -t Azure-Samples/azure-sql-db-session-recommender
