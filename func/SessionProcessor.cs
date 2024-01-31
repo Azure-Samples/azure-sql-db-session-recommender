@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.WebJobs.Extensions.Sql;
+using Microsoft.Azure.WebJobs.Extensions.Timers;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -67,7 +68,7 @@ namespace SessionRecommender.SessionProcessor
         }
 
         [FunctionName("SessionProcessor")]
-        public static async Task Run(
+        public static async Task RunOnSqlTrigger(
             [SqlTrigger("[web].[sessions]", "AZURE_SQL_CONNECTION_STRING")]
             IReadOnlyList<SqlChange<Session>> changes,
             ILogger logger)
@@ -130,5 +131,14 @@ namespace SessionRecommender.SessionProcessor
                 }
             }
         }
+    
+        [FunctionName("KeepAlive")]
+        public static void RunOnTimerTrigger(
+            [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
+            ILogger logger)
+            {
+                // Needed until SQL Trigger is GA.
+                logger.LogInformation("Keep Alive Signal");
+            }        
     }
 }
