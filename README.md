@@ -79,21 +79,15 @@ azd auth login
 
 ## Initialize the template
 
-Then download the template to the current directory:
+Then, execute the `azd init` command to initialize the environment (You do not need to run this command if you already have the code or have opened this in a Codespace or DevContainer).
 
 ```bash
 azd init -t Azure-Samples/azure-sql-db-session-recommender
 ```
 
-According to the prompt, enter an environment name.
+Enter an environment name.
 
 ## Deploy the sample
-
-**Note**: Resource Group Scoped Deployment is currently an alpha feature, so please run the following command before running command `azd up`.
-
-```bash
-azd config set alpha.resourceGroupDeployments on
-```
 
 Run `azd up` to provision all the resources to Azure and deploy the code to those resources.
 
@@ -101,7 +95,7 @@ Run `azd up` to provision all the resources to Azure and deploy the code to thos
 azd up 
 ```
 
-According to the prompt, select `subscription` and `location`, these are the necessary parameters when you create resources. After that, choose a resource group or create a new resource group. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
+Select your desired `subscription` and `location`. Then choose a resource group or create a new resource group. Wait a moment for the resource deployment to complete, click the Website endpoint and you will see the web app page.
 
 **Note**: Make sure to pick a region where all services are available like, for example, *West Europe* or *East US 2*
 

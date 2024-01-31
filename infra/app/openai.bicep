@@ -54,3 +54,4 @@ resource openAIKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (useKeyVa
 output endpoint string = account.properties.endpoint
 output id string = account.id
 output name string = account.name
+output openAIKeyName string = openAIKey.name

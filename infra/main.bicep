@@ -1,4 +1,4 @@
-targetScope = 'resourceGroup'
+targetScope = 'subscription'
 
 @minLength(1)
 @maxLength(64)
@@ -6,7 +6,7 @@ targetScope = 'resourceGroup'
 param environmentName string
 @minLength(1)
 @description('Primary location for all resources')
-param location string = resourceGroup().location
+param location string
 param openAIServiceName string = ''
 param openAISkuName string = 'S0'
 param embeddingDeploymentName string = 'embeddings'
@@ -29,15 +29,23 @@ param applicationInsightsName string = ''
 param hostingPlanName string = ''
 param staticWebAppName string = ''
 param logAnalyticsName string = ''
-param dashboardName string = ''
 @description('Flag to Use keyvault to store and use keys')
 param useKeyVault bool = true
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
+var rgName = 'rg-${environmentName}'
+
+// Organize resources in a resource group
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: rgName
+  location: location
+  tags: tags
+}
 
 module openAI 'app/openai.bicep' = {
   name: 'openai'
+  scope: rg
   params: {
     name: !empty(openAIServiceName) ? openAIServiceName : '${abbrs.cognitiveServicesAccounts}${resourceToken}'
     location: location
@@ -63,25 +71,24 @@ module openAI 'app/openai.bicep' = {
 
 module database 'app/sqlserver.bicep' = {
   name: 'database'
+  scope: rg
   params: {
     tags: tags
     location: location
     appUserPassword: appUserPassword
     sqlAdminPassword: sqlAdminPassword
     databaseName: dbName
-    keyVaultName: keyVault.outputs.name
     name: !empty(dbServiceName) ? dbServiceName : '${abbrs.sqlServers}catalog-${resourceToken}'
-    openAIKey: useKeyVault ? kv.getSecret('openAIKey') : ''
     openAIEndpoint: openAI.outputs.endpoint
     openAIServiceName: openAI.outputs.name
     openAIDeploymentName: embeddingDeploymentName
-    useKeyVault: useKeyVault
     principalId: principalId
   }
 }
 
-module keyVault 'app/keyvault.bicep' = {
+module keyVault 'core/security/keyvault.bicep' = {
   name: 'keyvault'
+  scope: rg
   params: {
     name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
     location: location
@@ -92,11 +99,12 @@ module keyVault 'app/keyvault.bicep' = {
 
 module web 'app/staticwebapp.bicep' = {
   name: 'web'
+  scope: rg
   params: {
     name: !empty(staticWebAppName) ? staticWebAppName : '${abbrs.webStaticSites}${resourceToken}'
     location: location
     tags: union(tags, { 'azd-service-name': 'web' })
-    sqlConnectionString: useKeyVault ? kv.getSecret('AZURE-SQL-CONNECTION-STRING') : '${database.outputs.connectionString}; Password=${appUserPassword}'
+    sqlConnectionString: '${database.outputs.connectionString}; Password=${appUserPassword}'
     sqlServerId: database.outputs.id
     sqlServerLocation: location
   }
@@ -104,6 +112,7 @@ module web 'app/staticwebapp.bicep' = {
 
 module hostingPlan 'core/host/appserviceplan.bicep' = {
   name: 'hostingPlan'
+  scope: rg
   params: {
     tags: tags
     location: location
@@ -118,6 +127,7 @@ module hostingPlan 'core/host/appserviceplan.bicep' = {
 
 module logAnalytics 'core/monitor/loganalytics.bicep' ={
   name: 'logAnalytics'
+  scope: rg
   params: {
     name: !empty(logAnalyticsName) ? logAnalyticsName : '${abbrs.insightsComponents}${resourceToken}'
     location: location
@@ -126,49 +136,53 @@ module logAnalytics 'core/monitor/loganalytics.bicep' ={
 
 module applicationInsights 'core/monitor/applicationinsights.bicep' = {
   name: 'monitoring'
+  scope: rg
   params: {
     location: location
     tags: tags
     name: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${resourceToken}'
-    includeDashboard: false
-    dashboardName: dashboardName
     logAnalyticsWorkspaceId: logAnalytics.outputs.id
   }
 }
 
 module functionApp 'app/functions.bicep' = {
   name: 'function'
+  scope: rg
   params: {
     tags: union(tags, { 'azd-service-name': 'functionapp' })
     location: location
     storageAccountName: storageAccount.outputs.name
-    openAIKey: useKeyVault ? kv.getSecret('openAIKey') : ''
+    openAIKeyName: useKeyVault ? openAI.outputs.openAIKeyName : ''
     functionAppName: !empty(functionAppName) ? functionAppName : '${abbrs.webSitesFunctions}${resourceToken}'
     hostingPlanId: hostingPlan.outputs.id
-    storageAccountKey: useKeyVault ? kv.getSecret('storageAccountKey') : ''
-    sqlConnectionString: useKeyVault ? kv.getSecret('AZURE-SQL-CONNECTION-STRING') : '${database.outputs.connectionString}; Password=${appUserPassword}'
+    sqlConnectionString: '${database.outputs.connectionString}; Password=${appUserPassword}'
     openAIEndpoint: openAI.outputs.endpoint
     openAIDeploymentName: embeddingDeploymentName
     keyVaultName: keyVault.outputs.name
     applicationInsightsConnectionString: applicationInsights.outputs.connectionString
     useKeyVault: useKeyVault
     openAIName: openAI.outputs.name
+    keyVaultEndpoint: keyVault.outputs.endpoint
   }
 }
 
-module storageAccount 'app/storageaccount.bicep' = {
+module storageAccount 'core/storage/storage-account.bicep' = {
   name: 'storage'
+  scope: rg
   params: {
     tags: tags
     name: !empty(storageAccountName) ? storageAccountName : '${abbrs.storageStorageAccounts}${resourceToken}'
     location: location
-    keyVaultName: keyVault.outputs.name
-    useKeyVault: useKeyVault
   }
 }
 
-resource kv 'Microsoft.KeyVault/vaults@2023-02-01' existing = if (useKeyVault) {
-  name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
+module funcaccess './core/security/keyvault-access.bicep' = if (useKeyVault) {
+  name: 'web-keyvault-access'
+  scope: rg
+  params: {
+    keyVaultName: keyVault.outputs.name
+    principalId: functionApp.outputs.identityPrincipalId
+  }
 }
 
 output AZURE_SQL_SQLSERVICE_CONNECTION_STRING_KEY string = database.outputs.connectionStringKey
