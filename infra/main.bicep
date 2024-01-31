@@ -176,6 +176,15 @@ module storageAccount 'core/storage/storage-account.bicep' = {
   }
 }
 
+module funcaccess './core/security/keyvault-access.bicep' = if (useKeyVault) {
+  name: 'web-keyvault-access'
+  scope: rg
+  params: {
+    keyVaultName: keyVault.outputs.name
+    principalId: functionApp.outputs.identityPrincipalId
+  }
+}
+
 output AZURE_SQL_SQLSERVICE_CONNECTION_STRING_KEY string = database.outputs.connectionStringKey
 output AZURE_FUNCTIONAPP_NAME string = functionApp.outputs.name
 output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint

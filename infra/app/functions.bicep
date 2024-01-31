@@ -45,3 +45,4 @@ module functionApp '../core/host/functions.bicep' = {
 
 output name string = functionApp.outputs.name
 output uri string = functionApp.outputs.uri
+output identityPrincipalId string = functionApp.outputs.identityPrincipalId
