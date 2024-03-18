@@ -40,6 +40,10 @@ For more details on the solution check also the following articles:
 - [How I built a session recommender in 1 hour using Open AI](https://dev.to/azure/how-i-built-a-session-recommender-in-1-hour-using-open-ai-5419)
 - [Vector Similarity Search with Azure SQL database and OpenAI](https://devblogs.microsoft.com/azure-sql/vector-similarity-search-with-azure-sql-database-and-openai/)
 
+## Retrieval Augmented Generation (RAG)
+
+An enhanced version of this sample, that also include Retrieval Augmented Generation (RAG), is available at this repository: https://github.com/Azure-Samples/azure-sql-db-session-recommender-v2. If you are new to similarity search and RAG, it is recommended to start with this repo and then move to the enhanced one.
+
 # Deploy the sample using the Azure Developer CLI (azd) template
 
 The Azure Developer CLI (`azd`) is a developer-centric command-line interface (CLI) tool for creating Azure applications.
